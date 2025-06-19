@@ -10,6 +10,6 @@ namespace Domain.Entities
          public int Id { get; set; }
         public string? Name { get; set; }
 
-        public ICollection<DetaillInspection> DetaillInspections { get; set; } = new HashSet<DetaillInspection>();
+        public ICollection<DetailInspection> DetaillInspections { get; set; } = new HashSet<DetailInspection>();
     }
 }

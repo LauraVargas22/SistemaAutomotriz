@@ -23,7 +23,7 @@ namespace Domain.Entities
         public TypeService? TypeService { get; set; }
         public Vehicle? Vehicle { get; set; }
         public Client? Client { get; set; }
-        public ICollection<DetaillInspection> DetaillInspections { get; set; } = new HashSet<DetaillInspection>();
+        public ICollection<DetailInspection> DetaillInspections { get; set; } = new HashSet<DetailInspection>();
         public ICollection<OrderDetails> OrderDetails { get; set; } = new HashSet<OrderDetails>();
 
         public ICollection<DetailsDiagnostic> DetailsDiagnostics { get; set; } = new HashSet<DetailsDiagnostic>();
