@@ -7,8 +7,8 @@ namespace Domain.Entities
 {
     public class DetailsDiagnostic : BaseEntity
     {
-         public int ServiceOrder_Id { get; set; }
-        public int Diagnostic_Id { get; set; }
+         public int ServiceOrderId { get; set; }
+        public int DiagnosticId { get; set; }
 
         public ServiceOrder? ServiceOrder { get; set; }
         public Diagnostic? Diagnostic { get; set; }
