@@ -1,0 +1,6 @@
+@ApiSGTA_HostAddress = http://localhost:5070
+
+GET {{ApiSGTA_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
