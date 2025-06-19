@@ -14,18 +14,15 @@ namespace Infrastructure.Configuration
             builder.HasKey(us => new { us.SpecializationId, us.UserId });
 
             // Relaciones
-
             // Muchos UserSpecialization para un User
             builder.HasOne(us => us.User)
                    .WithMany(u => u.UserSpecializations)
-                   .HasForeignKey(us => us.UserId)
-                   .OnDelete(DeleteBehavior.Cascade);
+                   .HasForeignKey(us => us.UserId);
 
             // Muchos UserSpecialization para una Specialization
             builder.HasOne(us => us.Specialization)
                    .WithMany(s => s.UserSpecialization)
-                   .HasForeignKey(us => us.SpecializationId)
-                   .OnDelete(DeleteBehavior.Cascade);
+                   .HasForeignKey(us => us.SpecializationId);
         } 
     }
 }

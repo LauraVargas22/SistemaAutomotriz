@@ -12,17 +12,15 @@ namespace Infrastructure.Configuration
 
             // Clave primaria
             builder.HasKey(s => s.Id);
+            builder.Property(di => di.Id)
+                   .ValueGeneratedOnAdd()
+                   .IsRequired()
+                   .HasColumnName("id");
 
             // Propiedades
             builder.Property(s => s.Name)
                    .IsRequired()
                    .HasMaxLength(50);
-
-            // Relaciones
-            builder.HasMany(s => s.UserSpecialization)
-                   .WithOne(us => us.Specialization)
-                   .HasForeignKey(us => us.SpecializationId)
-                   .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

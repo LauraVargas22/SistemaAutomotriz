@@ -16,24 +16,21 @@ namespace Infrastructure.Configuration
                 .HasColumnName("id");
 
             builder.Property(di => di.ServiceOrderId)
-                .HasColumnName("ServiceOrder_id");
+                .HasColumnName("serviceOrder_id");
 
             builder.Property(di => di.InspectionId)
-                .HasColumnName("Inspection_id");
+                .HasColumnName("inspection_id");
 
             builder.Property(di => di.Quantity)
-                .HasColumnName("Quantity");
+                .HasColumnName("quantity");
                 
             builder.HasOne(di => di.ServiceOrder)
                 .WithMany(so => so.DetaillInspections)
-                .HasForeignKey(di => di.ServiceOrderId)
-                .OnDelete(DeleteBehavior.Cascade);;
+                .HasForeignKey(di => di.ServiceOrderId);
 
             builder.HasOne(di => di.Inspection)
                 .WithMany(i => i.DetaillInspections)
-                .HasForeignKey(di => di.InspectionId)
-                .OnDelete(DeleteBehavior.Cascade);;
-
+                .HasForeignKey(di => di.InspectionId);
         }
     }
 }

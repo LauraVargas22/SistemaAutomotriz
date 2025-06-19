@@ -16,7 +16,7 @@ namespace Infrastructure.Configuration
                 .HasColumnName("id");
 
             builder.Property(i => i.Name)
-                .HasColumnName("Name")
+                .HasColumnName("name")
                 .HasMaxLength(20);
         }
     }

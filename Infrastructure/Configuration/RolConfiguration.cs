@@ -11,16 +11,14 @@ namespace Infrastructure.Configuration
             builder.ToTable("Roles");
 
             builder.HasKey(r => r.Id);
+            builder.Property(di => di.Id)
+                   .ValueGeneratedOnAdd()
+                   .IsRequired()
+                   .HasColumnName("id");
 
             builder.Property(r => r.Description)
                    .IsRequired()
                    .HasMaxLength(50);
-
-            // Uno a muchos: Rol -> UserRol
-            builder.HasMany(r => r.UserRoles)
-                   .WithOne(ur => ur.Rol)  
-                   .HasForeignKey(ur => ur.RolId)
-                   .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
