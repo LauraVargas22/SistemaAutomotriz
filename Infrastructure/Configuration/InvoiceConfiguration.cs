@@ -18,16 +18,11 @@ namespace Infrastructure.Configuration
 
             builder.Property(i => i.TotalPrice)
                 .HasColumnType("decimal")
-                .HasColumnName("TotalPrice");
+                .HasColumnName("total_price");
 
             builder.Property(i => i.Date)
                 .IsRequired()
-                .HasColumnName("Date");
-
-            builder.HasOne(so => so.ServiceOrders)
-                .WithMany(i => i.Invoices)
-                .HasForeignKey(so => so.ServiceOrderId)
-                .OnDelete(DeleteBehavior.Cascade);;
+                .HasColumnName("date");
         }
     }
 }

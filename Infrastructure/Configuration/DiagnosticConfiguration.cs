@@ -4,35 +4,32 @@ using Domain.Entities;
 
 namespace Infrastructure.Configuration
 {
-    public class DiagnosticConfiguration : IEntityTypeConfiguration<Diagnostic>
-    {
-        public void Configure(EntityTypeBuilder<Diagnostic> builder)
-        {
-            builder.ToTable("Diagnostics");
+       public class DiagnosticConfiguration : IEntityTypeConfiguration<Diagnostic>
+       {
+              public void Configure(EntityTypeBuilder<Diagnostic> builder)
+              {
+                     builder.ToTable("diagnostics");
 
-            // Clave primaria
-            builder.HasKey(d => d.Id);
+                     // Clave primaria
+                     builder.HasKey(d => d.Id);
+                     builder.Property(di => di.Id)
+                           .ValueGeneratedOnAdd()
+                           .IsRequired()
+                           .HasColumnName("id");
 
-            // Propiedades
-            builder.Property(d => d.Description)
-                   .HasMaxLength(400); // Ajusta según lo que necesites
+                     // Propiedades
+                     builder.Property(d => d.Description)
+                     .HasColumnName("description");
 
-            builder.Property(d => d.UserId)
-                   .IsRequired()
-                   .HasColumnName("UserId");
+                     builder.Property(d => d.UserId)
+                            .IsRequired()
+                            .HasColumnName("user_id");
 
-            // Relaciones
+                     // Relaciones
 
-            // Uno a muchos: Diagnostic -> DetailsDiagnostics
-            builder.HasMany(d => d.DetailsDiagnostics)
-                   .WithOne(dd => dd.Diagnostic)
-                   .HasForeignKey(dd => dd.DiagnosticId)
-                   .OnDelete(DeleteBehavior.Cascade);
-
-            builder.HasOne(d => d.User)
-                    .WithMany(u => u.Diagnostics)
-                    .HasForeignKey(d => d.UserId)
-                    .OnDelete(DeleteBehavior.Cascade);
-        }
-    }
+                     builder.HasOne(d => d.User)
+                            .WithMany(u => u.Diagnostics)
+                            .HasForeignKey(d => d.UserId);
+              }
+       }
 }

@@ -27,6 +27,6 @@ namespace Domain.Entities
         public ICollection<OrderDetails> OrderDetails { get; set; } = new HashSet<OrderDetails>();
 
         public ICollection<DetailsDiagnostic> DetailsDiagnostics { get; set; } = new HashSet<DetailsDiagnostic>();
-        public ICollection<Invoice> Invoices { get; set; } = new HashSet<Invoice>();
+        public Invoice? Invoices { get; set; }
     }
 }

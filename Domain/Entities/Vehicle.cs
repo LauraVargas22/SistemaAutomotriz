@@ -14,7 +14,7 @@ namespace Domain.Entities
         public string? VIN { get; set; }
         public int Mileage { get; set; }
 
-        public Client? Client { get; set; }
+        public Client? Clients { get; set; }
 
         public ICollection<ServiceOrder> ServiceOrders { get; set; } = new HashSet<ServiceOrder>();
     }

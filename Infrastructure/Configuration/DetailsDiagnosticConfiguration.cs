@@ -18,14 +18,12 @@ namespace Infrastructure.Configuration
             // Muchos DetailsDiagnostic para un ServiceOrder
             builder.HasOne(dd => dd.ServiceOrder)
                    .WithMany(so => so.DetailsDiagnostics)
-                   .HasForeignKey(dd => dd.ServiceOrderId)
-                   .OnDelete(DeleteBehavior.Cascade);
+                   .HasForeignKey(dd => dd.ServiceOrderId);
 
             // Muchos UserSpessialization para una Spessialization
             builder.HasOne(dd => dd.Diagnostic)
                    .WithMany(d => d.DetailsDiagnostics)
-                   .HasForeignKey(dd => dd.DiagnosticId)
-                   .OnDelete(DeleteBehavior.Cascade);
+                   .HasForeignKey(dd => dd.DiagnosticId);
         } 
     }
 }

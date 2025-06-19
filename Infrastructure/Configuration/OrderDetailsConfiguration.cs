@@ -33,13 +33,11 @@ namespace Infrastructure.Configuration
 
             builder.HasOne(od => od.ServiceOrder)
                 .WithMany(so => so.OrderDetails)
-                .HasForeignKey(od => od.ServiceOrderId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .HasForeignKey(od => od.ServiceOrderId);
 
             builder.HasOne(od => od.SpareParts)
                 .WithMany(sp => sp.OrderDetails)
-                .HasForeignKey(od => od.SparePartId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .HasForeignKey(od => od.SparePartId);
         }
     }
 }

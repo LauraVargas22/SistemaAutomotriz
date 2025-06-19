@@ -7,7 +7,7 @@ namespace Domain.Entities
 {
     public class Rol : BaseEntity
     {
-         public int Id { get; set; }
+        public int Id { get; set; }
         public string? Description { get; set; }
 
         public ICollection<UserRol>? UserRoles { get; set; } = new HashSet<UserRol>();

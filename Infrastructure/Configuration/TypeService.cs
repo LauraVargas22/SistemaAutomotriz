@@ -24,7 +24,7 @@ namespace Infrastructure.Configuration
                 .HasColumnName("Duration");
 
             builder.Property(ts => ts.Price)
-                .HasColumnType("decimal")
+                .HasColumnType("decimal(18,2)")
                 .HasColumnName("Price");
         }
     }

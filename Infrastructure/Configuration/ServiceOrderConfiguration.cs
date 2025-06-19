@@ -48,23 +48,23 @@ namespace Infrastructure.Configuration
 
             builder.HasOne(so => so.Vehicle)
                 .WithMany(v => v.ServiceOrders)
-                .HasForeignKey(so => so.VehiclesId)
-                .OnDelete(DeleteBehavior.Restrict); 
+                .HasForeignKey(so => so.VehiclesId);
 
             builder.HasOne(so => so.TypeService)
                 .WithMany(ts => ts.ServiceOrders)
-                .HasForeignKey(so => so.TypeServiceId)
-                .OnDelete(DeleteBehavior.Restrict); 
+                .HasForeignKey(so => so.TypeServiceId);
 
             builder.HasOne(so => so.State)
                 .WithMany(s => s.ServiceOrders)
-                .HasForeignKey(so => so.StateId)
-                .OnDelete(DeleteBehavior.Restrict); 
+                .HasForeignKey(so => so.StateId);
 
             builder.HasOne(so => so.Client)
                 .WithMany(c => c.ServiceOrders)
-                .HasForeignKey(so => so.ClientId)
-                .OnDelete(DeleteBehavior.Restrict); 
+                .HasForeignKey(so => so.ClientId);
+
+            builder.HasOne(so => so.Invoices)
+                .WithOne(i => i.ServiceOrders)
+                .HasForeignKey<Invoice>(i => i.ServiceOrderId);
         }
     }
 }

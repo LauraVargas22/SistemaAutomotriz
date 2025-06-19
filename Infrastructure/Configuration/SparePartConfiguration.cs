@@ -31,8 +31,7 @@ namespace Infrastructure.Configuration
                 .HasColumnName("MiniStock");
 
             builder.Property(sp => sp.UnitPrice)
-                .HasPrecision(18, 2)
-                .HasColumnType("decimal")
+                .HasColumnType("decimal(18,2)")
                 .HasColumnName("UnitPrice");
 
             builder.Property(sp => sp.Category)
