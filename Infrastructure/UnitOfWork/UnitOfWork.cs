@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Application.Interfaces;
 using Infrastructure.Data;
 using Infrastructure.Repositories;
@@ -21,16 +17,13 @@ namespace Infrastructure.UnitOfWork
         private IRolRepository? _rolRepository;
         private IServiceOrderRepository? _serviceOrderRepository;
         private ISparePartRepository? _sparePartRepository;
-        private ISpecializationRepository? _specialization;
+        private ISpecializationRepository? _specializationRepository;
         private IStateRepository? _stateRepository;
         private ITypeServiceRepository? _typeServiceRepository;
         private IUserRepository? _userRepository;
+        private IUserRolRepository? _userRolRepository;
         private IUserSpecializationRepository? _userSpecializationRepository;
         private IVehicleRepository? _vehicleRepository;
-
-
-
-
 
         private readonly AutoTallerDbContext _context;
 
@@ -39,11 +32,7 @@ namespace Infrastructure.UnitOfWork
             _context = context;
         }
 
-
-
-
-
-        public IAuditoryRepository Auditory
+        public IAuditoryRepository AuditoryRepository
         {
             get
             {
@@ -55,8 +44,7 @@ namespace Infrastructure.UnitOfWork
             }
         }
 
-
-        public IClientRepository Client
+        public IClientRepository ClientRepository
         {
             get
             {
@@ -68,8 +56,7 @@ namespace Infrastructure.UnitOfWork
             }
         }
 
-
-        public IDetailInspectionRepository DetailInspection
+        public IDetailInspectionRepository DetailInspectionRepository
         {
             get
             {
@@ -81,8 +68,7 @@ namespace Infrastructure.UnitOfWork
             }
         }
 
-
-        public IDetailsDiagnosticRepository DetailsDiagnostic
+        public IDetailsDiagnosticRepository DetailsDiagnosticRepository
         {
             get
             {
@@ -94,9 +80,7 @@ namespace Infrastructure.UnitOfWork
             }
         }
 
-
-
-        public IDiagnosticRepository Diagnostic
+        public IDiagnosticRepository DiagnosticRepository
         {
             get
             {
@@ -108,7 +92,7 @@ namespace Infrastructure.UnitOfWork
             }
         }
 
-        public IInspectionRepository Inspection
+        public IInspectionRepository InspectionRepository
         {
             get
             {
@@ -120,16 +104,158 @@ namespace Infrastructure.UnitOfWork
             }
         }
 
+        public IInvoiceRepository InvoiceRepository
+        {
+            get
+            {
+                if (_invoiceRepository == null)
+                {
+                    _invoiceRepository = new InvoiceRepository(_context);
+                }
+                return _invoiceRepository;
+            }
+        }
+
+        public IOrderDetailsRepository OrderDetailsRepository
+        {
+            get
+            {
+                if (_orderDetailsRepository == null)
+                {
+                    _orderDetailsRepository = new OrderDetailsRepository(_context);
+                }
+                return _orderDetailsRepository;
+            }
+        }
+
+        public IRolRepository RolRepository
+        {
+            get
+            {
+                if (_rolRepository == null)
+                {
+                    _rolRepository = new RolRepository(_context);
+                }
+                return _rolRepository;
+            }
+        }
+
+        public IServiceOrderRepository ServiceOrderRepository
+        {
+            get
+            {
+                if (_serviceOrderRepository == null)
+                {
+                    _serviceOrderRepository = new ServiceOrderRepository(_context);
+                }
+                return _serviceOrderRepository;
+            }
+        }
+
+        public ISparePartRepository SparePartRepository
+        {
+            get
+            {
+                if (_sparePartRepository == null)
+                {
+                    _sparePartRepository = new SparePartRepository(_context);
+                }
+                return _sparePartRepository;
+            }
+        }
+
+        public ISpecializationRepository SpecializationRepository
+        {
+            get
+            {
+                if (_specializationRepository == null)
+                {
+                    _specializationRepository = new SpecializationRepository(_context);
+                }
+                return _specializationRepository;
+            }
+        }
+
+        public IStateRepository StateRepository
+        {
+            get
+            {
+                if (_stateRepository == null)
+                {
+                    _stateRepository = new StateRepository(_context);
+                }
+                return _stateRepository;
+            }
+        }
+
+        public ITypeServiceRepository TypeServiceRepository
+        {
+            get
+            {
+                if (_typeServiceRepository == null)
+                {
+                    _typeServiceRepository = new TypeServiceRepository(_context);
+                }
+                return _typeServiceRepository;
+            }
+        }
+
+        public IUserRepository UserRepository
+        {
+            get
+            {
+                if (_userRepository == null)
+                {
+                    _userRepository = new UserRepository(_context);
+                }
+                return _userRepository;
+            }
+        }
+
+        public IUserRolRepository UserRolRepository
+        {
+            get
+            {
+                if (_userRolRepository == null)
+                {
+                    _userRolRepository = new UserRolRepository(_context);
+                }
+                return _userRolRepository;
+            }
+        }
+
+        public IUserSpecializationRepository UserSpessializationRepository
+        {
+            get
+            {
+                if (_userSpecializationRepository == null)
+                {
+                    _userSpecializationRepository = new UserSpecializationRepository(_context);
+                }
+                return _userSpecializationRepository;
+            }
+        }
+
+        public IVehicleRepository VehicleRepository
+        {
+            get
+            {
+                if (_vehicleRepository == null)
+                {
+                    _vehicleRepository = new VehicleRepository(_context);
+                }
+                return _vehicleRepository;
+            }
+        }
 
         public async Task<int> SaveAsync()
         {
             return await _context.SaveChangesAsync();
         }
+
         public void Dispose()
         {
             _context.Dispose();
         }
-
-
     }
 }
