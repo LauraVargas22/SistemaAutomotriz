@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities
 {
-    public class DetaillInspection : BaseEntity
+    public class DetailInspection : BaseEntity
     {
-         public int Id { get; set; }
+        public int Id { get; set; }
         public int ServiceOrder_Id { get; set; }
         public int Inspection_Id { get; set; }
         public int Quantity { get; set; }

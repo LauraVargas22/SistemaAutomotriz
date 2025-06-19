@@ -1,3 +1,7 @@
+// Add new USINGS needed to make it works
+using Microsoft.EntityFrameworkCore;
+using Infrastructure.Data;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -5,6 +9,13 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
+
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+// Conexion database PostgreSQL
+builder.Services.AddDbContext<AutoTallerDbContext>(options =>
+    options.UseNpgsql(connectionString));
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
