@@ -18,5 +18,7 @@ namespace Domain.Entities
         public ICollection<UserRol>? UserRols { get; set; } = new HashSet<UserRol>();
         public ICollection<Diagnostic>? Diagnostics { get; set; } = new HashSet<Diagnostic>();
         public ICollection<UserSpecialization>? UserSpecializations { get; set; } = new HashSet<UserSpecialization>();
+        public ICollection<RefreshToken> RefreshTokens { get; set; } = new HashSet<RefreshToken>();
+        public ICollection<UserRol> UserRol { get; set; } = new HashSet<UserRol>();
     }
-    }
+}
