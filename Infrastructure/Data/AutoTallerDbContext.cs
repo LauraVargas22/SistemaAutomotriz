@@ -10,7 +10,7 @@ namespace Infrastructure.Data
 {
     public class AutoTallerDbContext : DbContext
     {
-        public AutoTallerDbContext(DbContextOptions<AutoTallerDbContext> options) : base(options) { }
+        public AutoTallerDbContext(DbContextOptions<AutoTallerDbContext> options) : base(options) {}
 
         public DbSet<Auditory> Auditory { get; set; }
         public DbSet<Client> Client { get; set; }

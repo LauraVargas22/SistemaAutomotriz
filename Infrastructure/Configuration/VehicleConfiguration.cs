@@ -41,7 +41,7 @@ namespace Infrastructure.Configuration
             // Relación muchos a uno hacia Client (se configura solo el lado dependiente aquí)
             builder.HasOne(c => c.Clients)
                    .WithMany(v => v.Vehicles)
-                   .HasForeignKey(v => v.ClientId);
+                   .HasForeignKey(c => c.ClientId);
         }
     }
 }

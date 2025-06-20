@@ -8,7 +8,7 @@ namespace Domain.Entities
     public class Vehicle : BaseEntity
     {
         public int Id { get; set; }
-        public string? ClientId { get; set; }
+        public int ClientId { get; set; }
         public string? Brand { get; set; }
         public string? Model { get; set; }
         public string? VIN { get; set; }
