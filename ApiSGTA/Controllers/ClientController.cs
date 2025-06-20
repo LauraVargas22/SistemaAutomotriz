@@ -67,8 +67,8 @@ namespace ApiSGTA.Controllers
             if (clientDto == null)
                 return NotFound();
 
-            var categoriesCatalog = _mapper.Map<Client>(clientDto);
-            _unitOfWork.ClientRepository.Update(categoriesCatalog);
+            var clients = _mapper.Map<Client>(clientDto);
+            _unitOfWork.ClientRepository.Update(clients);
             await _unitOfWork.SaveAsync();
             return Ok(clientDto);
         }
