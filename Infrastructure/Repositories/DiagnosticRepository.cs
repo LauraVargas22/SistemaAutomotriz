@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Application.Interfaces;
 using Domain.Entities;
 using Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories
 {
@@ -15,6 +16,12 @@ namespace Infrastructure.Repositories
         public DiagnosticRepository(AutoTallerDbContext context) : base(context)
         {
             _context = context;
+        }
+
+        public override async Task<Diagnostic> GetByIdAsync(int id)
+        {
+            return await _context.Diagnostic
+                .FirstOrDefaultAsync(d => d.Id == id) ?? throw new KeyNotFoundException($"Diagnostic with id {id} was not found");
         }
     }
 }

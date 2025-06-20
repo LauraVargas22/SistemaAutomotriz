@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Application.Interfaces;
 using Infrastructure.Data;
 using Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories
 {
@@ -15,6 +16,12 @@ namespace Infrastructure.Repositories
         public RolRepository(AutoTallerDbContext context) : base(context)
         {
             _context = context;
+        }
+
+        public override async Task<Rol> GetByIdAsync(int id)
+        {
+            return await _context.Rol
+                .FirstOrDefaultAsync(r => r.Id == id) ?? throw new KeyNotFoundException($"Rol with id {id} was not found");
         }
     }
 }

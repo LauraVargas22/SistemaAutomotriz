@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Application.Interfaces;
 using Domain.Entities;
 using Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories
 {
@@ -17,5 +18,11 @@ namespace Infrastructure.Repositories
             _context = context;
         }
 
+        public async Task<DetailsDiagnostic> GetByIdAsync(int diagnosticId, int serviceOrderId)
+        {
+            return await _context.DetailsDiagnostics
+                .FirstOrDefaultAsync(ur => ur.DiagnosticId == diagnosticId && ur.ServiceOrderId == serviceOrderId)
+                ?? throw new KeyNotFoundException($"Details diagnostic with DiagnosticId {diagnosticId} and ServiceOrderId {serviceOrderId} was not found");
+        }
     }
 }

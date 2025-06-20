@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Domain.Entities;
 using Infrastructure.Data;
 using Application.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories
 {
@@ -17,5 +18,10 @@ namespace Infrastructure.Repositories
             _context = context;
         }
 
+        public override async Task<ServiceOrder> GetByIdAsync(int id)
+        {
+            return await _context.ServiceOrder
+                .FirstOrDefaultAsync(so => so.Id == id) ?? throw new KeyNotFoundException($"Service Order with id {id} was not found");
+        }
     }
 }
