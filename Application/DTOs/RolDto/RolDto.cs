@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Application.DTOs.RolDto
+namespace Application.DTOs
 {
     public class RolDto
     {

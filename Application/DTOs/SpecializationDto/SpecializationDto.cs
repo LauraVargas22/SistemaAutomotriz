@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Application.DTOs.SpecializationDto
+namespace Application.DTOs
 {
     public class SpecializationDto
     {
