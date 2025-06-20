@@ -24,11 +24,12 @@ namespace Infrastructure.Data
         public DbSet<SparePart> SparePart { get; set; }
         public DbSet<Specialization> Specialization { get; set; }
         public DbSet<State> State { get; set; }
-        public DbSet<TypeService> TyperService { get; set; }
+        public DbSet<TypeService> TypeService { get; set; }
         public DbSet<User> User { get; set; }
         public DbSet<UserRol> UserRole { get; set; }
         public DbSet<UserSpecialization> UserSpecialization { get; set; }
         public DbSet<Vehicle> Vehicle { get; set; }
+        public DbSet<DetailsDiagnostic> DetailsDiagnostics { get; set; }
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -224,7 +224,7 @@ namespace Infrastructure.UnitOfWork
             }
         }
 
-        public IUserSpecializationRepository UserSpessializationRepository
+        public IUserSpecializationRepository UserSpecializationRepository
         {
             get
             {

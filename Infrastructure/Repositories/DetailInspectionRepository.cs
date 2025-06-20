@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Application.Interfaces;
 using Domain.Entities;
 using Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories
 {
@@ -15,6 +16,12 @@ namespace Infrastructure.Repositories
         public DetailInspectionRepository(AutoTallerDbContext context) : base(context)
         {
             _context = context;
+        }
+
+        public override async Task<DetailInspection> GetByIdAsync(int id)
+        {
+            return await _context.DetaillInspection
+                .FirstOrDefaultAsync(di => di.Id == id) ?? throw new KeyNotFoundException($"Detail Inspection with id {id} was not found");
         }
     }
 }

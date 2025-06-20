@@ -6,6 +6,7 @@ using Domain.Entities;
 using Infrastructure.Data;
 using Application.Interfaces;
 using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories
 {
@@ -16,6 +17,12 @@ namespace Infrastructure.Repositories
         public AuditoryRepository(AutoTallerDbContext context) : base(context)
         {
             _context = context;
+        }
+
+        public override async Task<Auditory> GetByIdAsync(int id)
+        {
+            return await _context.Auditory
+                .FirstOrDefaultAsync(a => a.Id == id) ?? throw new KeyNotFoundException($"Auditory with id {id} was not found");
         }
     }
 }
