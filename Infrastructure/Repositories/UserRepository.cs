@@ -18,10 +18,21 @@ namespace Infrastructure.Repositories
             _context = context;
         }
 
-        public override async Task<User> GetByIdAsync(int id)
+        public async Task<User> GetByUsernameAsync(string username)
         {
             return await _context.User
-                .FirstOrDefaultAsync(cc => cc.Id == id) ?? throw new KeyNotFoundException($"User with id {id} was not found");
+                            .Include(u=>u.UserRols)
+                            .ThenInclude(ur=>ur.Rol)
+                            .Include(u => u.RefreshTokens)
+                            .FirstOrDefaultAsync(u=>u.UserName.ToLower()==username.ToLower());
         }
+        public async Task<User> GetByRefreshTokenAsync(string refreshToken)
+        {
+            return await _context.User
+                        .Include(u=>u.UserRols)
+                            .ThenInclude(ur=>ur.Rol)
+                        .Include(u => u.RefreshTokens)
+                        .FirstOrDefaultAsync(u=>u.RefreshTokens.Any(t=>t.Token==refreshToken));
+        }
     }
 }
