@@ -23,7 +23,7 @@ namespace Infrastructure.Configuration
 
             builder.Property(di => di.Quantity)
                 .HasColumnName("quantity");
-                
+
             builder.HasOne(di => di.ServiceOrder)
                 .WithMany(so => so.DetaillInspections)
                 .HasForeignKey(di => di.ServiceOrderId);
@@ -31,6 +31,18 @@ namespace Infrastructure.Configuration
             builder.HasOne(di => di.Inspection)
                 .WithMany(i => i.DetaillInspections)
                 .HasForeignKey(di => di.InspectionId);
+                
+            builder.Property(e => e.CreatedAt)
+                .HasColumnName("createdAt")
+                .HasColumnType("timestamp")
+                .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                .ValueGeneratedOnAdd();
+
+            builder.Property(e => e.UpdatedAt)
+                .HasColumnName("updatedAt")
+                .HasColumnType("timestamp")
+                .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                .ValueGeneratedOnAddOrUpdate();
         }
     }
 }

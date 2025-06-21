@@ -30,6 +30,18 @@ namespace Infrastructure.Configuration
                      builder.HasOne(d => d.User)
                             .WithMany(u => u.Diagnostics)
                             .HasForeignKey(d => d.UserId);
+
+                     builder.Property(e => e.CreatedAt)
+                            .HasColumnName("createdAt")
+                            .HasColumnType("timestamp")
+                            .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                            .ValueGeneratedOnAdd();
+
+                     builder.Property(e => e.UpdatedAt)
+                            .HasColumnName("updatedAt")
+                            .HasColumnType("timestamp")
+                            .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                            .ValueGeneratedOnAddOrUpdate();
               }
        }
 }

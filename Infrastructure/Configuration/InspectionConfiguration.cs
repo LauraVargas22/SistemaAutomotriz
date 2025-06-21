@@ -18,6 +18,18 @@ namespace Infrastructure.Configuration
             builder.Property(i => i.Name)
                 .HasColumnName("name")
                 .HasMaxLength(20);
+
+            builder.Property(e => e.CreatedAt)
+                .HasColumnName("createdAt")
+                .HasColumnType("timestamp")
+                .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                .ValueGeneratedOnAdd();
+
+            builder.Property(e => e.UpdatedAt)
+                .HasColumnName("updatedAt")
+                .HasColumnType("timestamp")
+                .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                .ValueGeneratedOnAddOrUpdate();
         }
     }
 }
