@@ -23,6 +23,7 @@ namespace Application.Interfaces
         ITypeServiceRepository TypeServiceRepository { get; }
         IUserRepository UserRepository { get; }
         IUserRolRepository UserRolRepository { get; }
+        IUserSpecializationRepository UserSpecializationRepository { get; }
         IVehicleRepository VehicleRepository { get; }
         Task<int> SaveAsync();
     }

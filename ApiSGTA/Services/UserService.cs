@@ -34,18 +34,20 @@ namespace ApiSGTA.Services
         {
             var usuario = new User
             {
-                Name = registerDto.Name,
-                Email = registerDto.Email,
                 UserName = registerDto.Username,
+                Email = registerDto.Email,
+                Password = registerDto.Password,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow
             };
 
-            usuario.Password = _passwordHasher.HashPassword(usuario, registerDto.Password);
+            usuario.Password = _passwordHasher.HashPassword(usuario, registerDto.Password!);
 
             var UsuarioExiste = _unitOfWork.UserRepository
                 .Find(u => u.UserName.ToLower() == registerDto.Username.ToLower())
                 .FirstOrDefault();
 
-            if (UsuarioExiste != null)
+            if (UsuarioExiste == null)
             {
                 var rolPredeterminado = _unitOfWork.RolRepository
                     .Find(u => u.Description == UserAuthorization.rol_predeterminado.ToString())
@@ -53,13 +55,9 @@ namespace ApiSGTA.Services
 
                 try
                 {
-                    var relacion = new UserRol
-                    {
-                        UserId = usuario.Id,
-                        RolId = rolPredeterminado.Id
-                    };
+                    usuario.Rols.Add(rolPredeterminado);
                     _unitOfWork.UserRepository.Add(usuario);
-                    _unitOfWork.UserRolRepository.Add(relacion);
+                    
                     await _unitOfWork.SaveAsync();
 
                     return $"El usuario {registerDto.Username} hasido registrado exitosamente.";
@@ -143,24 +141,18 @@ namespace ApiSGTA.Services
 
                 if (rolExiste != null)
                 {
-                    var usuarioTieneRol = usuario.UserRols
-                        .Any(ur => ur.RolId == rolExiste.Id);
+                    var usuarioTieneRol = usuario.Rols
+                        .Any(u => u.Id == rolExiste.Id);
 
                     if (usuarioTieneRol == false)
                     {
-                        var relacion = new UserRol
-                        {
-                            UserId = usuario.Id,
-                            RolId = rolExiste.Id
-                        };
-
-                        _unitOfWork.UserRolRepository.Add(relacion);
+                        usuario.Rols.Add(rolExiste);
+                        _unitOfWork.UserRepository.Update(usuario);
                         await _unitOfWork.SaveAsync();
                     }
 
                     return $"Rol {model.Role} agregado al usuario {model.Username} exitosamente.";
                 }
-
                 return $"Rol {model.Role} no existe.";
             }
 
@@ -228,9 +220,7 @@ namespace ApiSGTA.Services
         
         private JwtSecurityToken CreateJwtToken(User usuario)
         {
-            var roles = usuario.UserRols
-                .Select(mr => mr.Rol)
-                .ToList();
+            var roles = usuario.Rols;
             var roleClaims = new List<Claim>();
             foreach (var role in roles)
             {

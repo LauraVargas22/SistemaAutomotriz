@@ -10,6 +10,7 @@ namespace Domain.Entities
         public int Id { get; set; }
         public string? Description { get; set; }
 
-        public ICollection<UserRol>? UserRoles { get; set; } = new HashSet<UserRol>();
+        public ICollection<UserRol>? UserRoles { get; set; }
+        public ICollection<User> Users { get; set; } = new HashSet<User>();
     }
 }

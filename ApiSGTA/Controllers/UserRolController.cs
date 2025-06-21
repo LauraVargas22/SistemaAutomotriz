@@ -29,55 +29,44 @@ namespace ApiSGTA.Controllers
             return _mapper.Map<List<UserRolDto>>(userRols);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{userId:int}/{rolId:int}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<UserRolDto>> Get(int id)
+        public async Task<ActionResult<UserRolDto>> Get(int userId, int rolId)
         {
-            var userRol = await _unitOfWork.UserRolRepository.GetByIdAsync(id);
+            var userRol = await _unitOfWork.UserRolRepository.GetByIdsAsync(userId, rolId);
             if (userRol == null)
             {
-                return NotFound($"UserRol with id {id} was not found.");
+                return NotFound($"UserRol with keys ({userId}, {rolId}) not found.");
             }
-            return _mapper.Map<UserRolDto>(userRol);
+            return Ok(_mapper.Map<UserRolDto>(userRol));
         }
 
-        // [HttpPost]
-        // [ProducesResponseType(StatusCodes.Status200OK)]
-        // [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        // public async Task<ActionResult<UserRol>> Post(UserRolDto userRolDto)
-        // {
-        //     var userRol = _mapper.Map<UserRol>(userRolDto);
-        //     _unitOfWork.UserRolRepository.Add(userRol);
-        //     await _unitOfWork.SaveAsync();
-        //     if (userRolDto == null)
-        //     {
-        //         return BadRequest();
-        //     }
-        //     return CreatedAtAction(nameof(Post), new { id = userRolDto.Id }, userRol);
-        // }
-
-        [HttpPut("{id}")]
+        [HttpPut("{userId:int}/{rolId:int}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Put(int id, [FromBody] UserRolDto userRolDto)
+        public async Task<IActionResult> Put(int userId, int rolId, [FromBody] UserRolDto userRolDto)
         {
-            if (userRolDto == null)
+            if (userRolDto == null || userRolDto.UserId != userId || userRolDto.RolId != rolId)
+            {
+                return BadRequest("Mismatched or invalid data.");
+            }
+            var existing = await _unitOfWork.UserRolRepository.GetByIdsAsync(userId, rolId);
+            if (existing == null)
                 return NotFound();
-
-            var userRol = _mapper.Map<UserRol>(userRolDto);
-            _unitOfWork.UserRolRepository.Update(userRol);
+            var userMemberRole = _mapper.Map<UserRol>(userRolDto);
+            _unitOfWork.UserRolRepository.Update(userMemberRole);
             await _unitOfWork.SaveAsync();
             return Ok(userRolDto);
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{userId:int}/{rolId:int}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(int userId, int rolId)
         {
-            var userRol = await _unitOfWork.UserRolRepository.GetByIdAsync(id);
+            var userRol = await _unitOfWork.UserRolRepository.GetByIdsAsync(userId, rolId);
             if (userRol == null)
                 return NotFound();
 
