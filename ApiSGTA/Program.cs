@@ -6,6 +6,7 @@ using Infrastructure.UnitOfWork;
 using Application.Interfaces;
 using Microsoft.OpenApi.Models;
 using ApiSGTA.Extensions;
+using Application.UseCases;
 using Microsoft.AspNetCore.RateLimiting;
 using System.Threading.RateLimiting;
 
@@ -14,6 +15,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddAutoMapper(Assembly.GetEntryAssembly());
 builder.Services.ConfigureCors();
 builder.Services.AddApplicationServices();
+// New
+builder.Services.AddScoped<CreateServiceOrderUseCase>();
 builder.Services.AddCustomRateLimiter();
 
 
