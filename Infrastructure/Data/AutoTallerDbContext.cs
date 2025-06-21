@@ -30,6 +30,7 @@ namespace Infrastructure.Data
         public DbSet<UserSpecialization> UserSpecialization { get; set; }
         public DbSet<Vehicle> Vehicle { get; set; }
         public DbSet<DetailsDiagnostic> DetailsDiagnostics { get; set; }
+        public DbSet<RefreshToken> RefreshTokens { get; set; }
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

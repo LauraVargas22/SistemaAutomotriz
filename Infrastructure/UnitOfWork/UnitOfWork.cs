@@ -24,6 +24,7 @@ namespace Infrastructure.UnitOfWork
         private IUserRolRepository? _userRolRepository;
         private IUserSpecializationRepository? _userSpecializationRepository;
         private IVehicleRepository? _vehicleRepository;
+        private IRefreshTokenRepository? _refreshToken;
 
         private readonly AutoTallerDbContext _context;
 
@@ -245,6 +246,18 @@ namespace Infrastructure.UnitOfWork
                     _vehicleRepository = new VehicleRepository(_context);
                 }
                 return _vehicleRepository;
+            }
+        }
+
+        public IRefreshTokenRepository RefreshTokenRepository
+        {
+            get
+            {
+                if (_refreshToken == null)
+                {
+                    _refreshToken = new RefreshTokenRepository(_context);
+                }
+                return _refreshToken;
             }
         }
 

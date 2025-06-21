@@ -25,6 +25,7 @@ namespace Application.Interfaces
         IUserRolRepository UserRolRepository { get; }
         IUserSpecializationRepository UserSpecializationRepository { get; }
         IVehicleRepository VehicleRepository { get; }
+        IRefreshTokenRepository RefreshTokenRepository { get; }
         Task<int> SaveAsync();
     }
 }
