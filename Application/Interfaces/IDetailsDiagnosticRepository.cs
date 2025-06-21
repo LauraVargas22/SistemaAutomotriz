@@ -6,8 +6,11 @@ using Domain.Entities;
 
 namespace Application.Interfaces
 {
-    public interface IDetailsDiagnosticRepository : IGenericRepository<DetailsDiagnostic>
+    public interface IDetailsDiagnosticRepository
     {
-        
+        Task<IEnumerable<DetailsDiagnostic>> GetAllAsync();
+        void Remove(DetailsDiagnostic entity);
+        void Update(DetailsDiagnostic entity);
+        Task<DetailsDiagnostic?> GetByIdsAsync(int diagnosticId, int serviceOrderId);
     }
 }

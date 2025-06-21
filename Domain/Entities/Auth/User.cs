@@ -15,10 +15,10 @@ namespace Domain.Entities
         public string? Password { get; set; }
         public ICollection<ServiceOrder>? ServiceOrders { get; set; } = new HashSet<ServiceOrder>();
         public ICollection<Auditory>? Auditories { get; set; } = new HashSet<Auditory>();
-        public ICollection<UserRol>? UserRols { get; set; } = new HashSet<UserRol>();
+        public ICollection<Rol>? Rols { get; set; } = new HashSet<Rol>();
         public ICollection<Diagnostic>? Diagnostics { get; set; } = new HashSet<Diagnostic>();
         public ICollection<UserSpecialization>? UserSpecializations { get; set; } = new HashSet<UserSpecialization>();
         public ICollection<RefreshToken> RefreshTokens { get; set; } = new HashSet<RefreshToken>();
-        public ICollection<UserRol> UserRol { get; set; } = new HashSet<UserRol>();
+        public ICollection<UserRol>? UserRols { get; set; }
     }
 }

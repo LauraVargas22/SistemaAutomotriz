@@ -25,63 +25,52 @@ namespace ApiSGTA.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<IEnumerable<UserSpecializationDto>>> Get()
         {
-            var userSpecializations = await _unitOfWork.UserSpessializationRepository.GetAllAsync();
+            var userSpecializations = await _unitOfWork.UserSpecializationRepository.GetAllAsync();
             return _mapper.Map<List<UserSpecializationDto>>(userSpecializations);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{userId:int}/{specializationId:int}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<UserSpecializationDto>> Get(int id)
+        public async Task<ActionResult<UserSpecializationDto>> Get(int userId, int specializationId)
         {
-            var userSpecialization = await _unitOfWork.UserSpessializationRepository.GetByIdAsync(id);
+            var userSpecialization = await _unitOfWork.UserSpecializationRepository.GetByIdsAsync(userId, specializationId);
             if (userSpecialization == null)
             {
-                return NotFound($"UserSpecialization with id {id} was not found.");
+                return NotFound($"User Specialization with keys ({userId}, {specializationId}) not found.");
             }
-            return _mapper.Map<UserSpecializationDto>(userSpecialization);
+            return Ok(_mapper.Map<UserRolDto>(userSpecialization));
         }
 
-        // [HttpPost]
-        // [ProducesResponseType(StatusCodes.Status200OK)]
-        // [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        // public async Task<ActionResult<UserSpecialization>> Post(UserSpecializationDto userSpecializationDto)
-        // {
-        //     var userSpecialization = _mapper.Map<UserSpecialization>(userSpecializationDto);
-        //     _unitOfWork.UserSpessializationRepository.Add(userSpecialization);
-        //     await _unitOfWork.SaveAsync();
-        //     if (userSpecializationDto == null)
-        //     {
-        //         return BadRequest();
-        //     }
-        //     return CreatedAtAction(nameof(Post), new { id = userSpecializationDto.Id }, userSpecialization);
-        // }
-
-        [HttpPut("{id}")]
+        [HttpPut("{userId:int}/{specializationId:int}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Put(int id, [FromBody] UserSpecializationDto userSpecializationDto)
+        public async Task<IActionResult> Put(int userId, int specializationId, [FromBody] UserSpecializationDto userSpecializationDto)
         {
-            if (userSpecializationDto == null)
+            if (userSpecializationDto == null || userSpecializationDto.UserId != userId || userSpecializationDto.SpecializationId != specializationId)
+            {
+                return BadRequest("Mismatched or invalid data.");
+            }
+            var existing = await _unitOfWork.UserSpecializationRepository.GetByIdsAsync(userId, specializationId);
+            if (existing == null)
                 return NotFound();
-
             var userSpecialization = _mapper.Map<UserSpecialization>(userSpecializationDto);
-            _unitOfWork.UserSpessializationRepository.Update(userSpecialization);
+            _unitOfWork.UserSpecializationRepository.Update(userSpecialization);
             await _unitOfWork.SaveAsync();
             return Ok(userSpecializationDto);
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{userId:int}/{specializationId:int}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(int userId, int specializationId)
         {
-            var userSpecialization = await _unitOfWork.UserSpessializationRepository.GetByIdAsync(id);
+            var userSpecialization = await _unitOfWork.UserSpecializationRepository.GetByIdsAsync(userId, specializationId);
             if (userSpecialization == null)
                 return NotFound();
 
-            _unitOfWork.UserSpessializationRepository.Remove(userSpecialization);
+            _unitOfWork.UserSpecializationRepository.Remove(userSpecialization);
             await _unitOfWork.SaveAsync();
 
             return NoContent();

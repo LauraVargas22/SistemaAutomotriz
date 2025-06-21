@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities
 {
-    public class UserSpecialization : BaseEntity
+    public class UserSpecialization
     { 
         
         public int UserId { get; set; }
