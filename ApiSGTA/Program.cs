@@ -4,8 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using ApiSGTA.Services;
 using Infrastructure.UnitOfWork;
 using Application.Interfaces;
-// Add swager
 using Microsoft.OpenApi.Models;
+
+// Add New Limiting
+using Microsoft.AspNetCore.RateLimiting;
+using System.Threading.RateLimiting;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -70,6 +73,21 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 
+builder.Services.AddRateLimiter(options =>
+{
+    options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(httpContext =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            factory: _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 10,                 
+                Window = TimeSpan.FromSeconds(30),
+                QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+                QueueLimit = 0
+            }));
+
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+});
 
 
 
@@ -86,7 +104,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI(options =>
     {
         options.SwaggerEndpoint("/swagger/v1/swagger.json", "SGTA API V1");
-        options.RoutePrefix = string.Empty; // To load the root, as an example: “https://localhost:5000/”
+        // To load the root, as an example: “https://localhost:5000/”
+        options.RoutePrefix = string.Empty;
     });
 }
 
@@ -97,6 +116,8 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 
+// Necessary to use Rate Limiter
+app.UseRateLimiter();
 
 app.UseHttpsRedirection();
 
