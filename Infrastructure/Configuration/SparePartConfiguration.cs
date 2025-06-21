@@ -38,6 +38,18 @@ namespace Infrastructure.Configuration
                 .HasMaxLength(50)
                 .HasColumnName("Category");
 
+            builder.Property(e => e.CreatedAt)
+                .HasColumnName("createdAt")
+                .HasColumnType("timestamp")
+                .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                .ValueGeneratedOnAdd();
+
+            builder.Property(e => e.UpdatedAt)
+                .HasColumnName("updatedAt")
+                .HasColumnType("timestamp")
+                .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                .ValueGeneratedOnAddOrUpdate();
+
         }
     }
 }

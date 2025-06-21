@@ -5,26 +5,36 @@ using ApiSGTA.Services;
 using Infrastructure.UnitOfWork;
 using Application.Interfaces;
 using Microsoft.OpenApi.Models;
-
 using ApiSGTA.Extensions;
 using Microsoft.AspNetCore.RateLimiting;
 using System.Threading.RateLimiting;
 
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddAutoMapper(Assembly.GetEntryAssembly());
+builder.Services.ConfigureCors();
+builder.Services.AddApplicationServices();
+builder.Services.AddCustomRateLimiter();
 
 
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
 // This method records Swagger
-builder.Services.AddSwaggerDocumentation();
-
-
-
-
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-// builder.Services.AddOpenApi();
+builder.Services.AddSwaggerGen(c =>
+{
+    //SwaggerDoc define la documentación de la API, "v1" es el identificador de la versión de la API, OpenApiInfo contiene la información general de la API.
+    c.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "Project SGTA",
+        Version = "v1",
+        Description = "API SGTA",
+        Contact = new OpenApiContact
+        {
+            Name = "Grupo",
+            Email = ""
+        }
+    });
+});
 
 builder.Services.AddDbContext<AutoTallerDbContext>(options =>
 {
@@ -33,44 +43,28 @@ builder.Services.AddDbContext<AutoTallerDbContext>(options =>
     //options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
 });
 
-
-// Servicios de aplicacion
-builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-
-
-// This method records Rate Limiting
-builder.Services.AddGlobalRateLimiting();
-
-// This method records JWT Authentication
-builder.Services.AddJwtAuthentication(builder.Configuration);
-
-
-
 var app = builder.Build();
 
-app.UseHttpsRedirection();
-
-// Checks if the application is running in the environment
 if (app.Environment.IsDevelopment())
 {
-    // Starts JSON generation of Swagger 
+    //app.UseSwagger() Habilita el middleware que genera el documento JSON de la API
     app.UseSwagger();
-    app.UseSwaggerUI(options =>
+    //app.UseSwaggerUI() Configura la interfaz de usuario de Swagger
+    app.UseSwaggerUI(c =>
     {
-        options.SwaggerEndpoint("/swagger/v1/swagger.json", "SGTA API V1");
-        // To load the root, as an example: “https://localhost:5000/”
-        options.RoutePrefix = string.Empty;
+        //SwaggerEndpoint especifica la ruta del documento JSON de Swagger, "Project EF API v1" nombre de la API
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Project API SGTA");
+        //Define la ruta base para acceder a la interfaz de usuario
+        c.RoutePrefix = "swagger";
     });
 }
 
-// Necessary to use JWT
-// First
-app.UseAuthentication();
-// Second
-app.UseAuthorization();
+app.UseCors("CorsPolicy");
 
-// Necessary to use Rate Limiter
+app.UseHttpsRedirection();
 app.UseRateLimiter();
+app.UseAuthorization();
+app.UseAuthentication();
+app.MapControllers();
 
 app.Run();

@@ -15,7 +15,7 @@ namespace Infrastructure.Persistence.Configurations
                    .ValueGeneratedOnAdd()
                    .IsRequired()
                    .HasColumnName("id");
-                   
+
             builder.Property(u => u.Name)
                 .HasMaxLength(50);
 
@@ -29,11 +29,23 @@ namespace Infrastructure.Persistence.Configurations
 
             builder.Property(u => u.Email)
                 .HasMaxLength(50);
-            
+
             builder.HasIndex(u => u.Email).IsUnique();
 
             builder.Property(u => u.Password)
                 .HasMaxLength(20);
+                
+            builder.Property(e => e.CreatedAt)
+                .HasColumnName("createdAt")
+                .HasColumnType("timestamp")
+                .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                .ValueGeneratedOnAdd();
+
+            builder.Property(e => e.UpdatedAt)
+                .HasColumnName("updatedAt")
+                .HasColumnType("timestamp")
+                .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                .ValueGeneratedOnAddOrUpdate();
         }
     }
 }
