@@ -8,7 +8,7 @@ namespace Infrastructure.Configuration
     {
         public void Configure(EntityTypeBuilder<UserSpecialization> builder)
         {
-            builder.ToTable("UserSpecializations");
+            builder.ToTable("user_specializations");
 
             // Clave primaria compuesta
             builder.HasKey(us => new { us.SpecializationId, us.UserId });

@@ -8,7 +8,7 @@ namespace Infrastructure.Configuration
     {
         public void Configure(EntityTypeBuilder<Vehicle> builder)
         {
-            builder.ToTable("Vehicles");
+            builder.ToTable("vehicles");
 
             // Clave primaria
             builder.HasKey(v => v.Id);
@@ -19,20 +19,24 @@ namespace Infrastructure.Configuration
 
             builder.Property(v => v.Brand)
                 .IsRequired()
-                .HasMaxLength(30);
+                .HasMaxLength(30)
+                .HasColumnName("brand");
 
             builder.Property(v => v.Model)
                 .IsRequired()
-                .HasMaxLength(50);
+                .HasMaxLength(50)
+                .HasColumnName("model");
 
             builder.Property(v => v.VIN)
                 .IsRequired()
-                .HasMaxLength(20);
+                .HasMaxLength(20)
+                .HasColumnName("vin");
 
             builder.HasIndex(v => v.VIN).IsUnique();
 
             builder.Property(v => v.Mileage)
-                .IsRequired();
+                .IsRequired()
+                .HasColumnName("mileage");
 
             builder.Property(v => v.ClientId)
                  .IsRequired()

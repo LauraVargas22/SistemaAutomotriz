@@ -18,14 +18,14 @@ namespace Infrastructure.Configuration
 
             builder.Property(ts => ts.Name)
                 .HasMaxLength(40)
-                .HasColumnName("Name");
+                .HasColumnName("name");
 
             builder.Property(ts => ts.Duration)
-                .HasColumnName("Duration");
+                .HasColumnName("duration");
 
             builder.Property(ts => ts.Price)
                 .HasColumnType("decimal(18,2)")
-                .HasColumnName("Price");
+                .HasColumnName("price");
 
             builder.Property(e => e.CreatedAt)
                 .HasColumnName("createdAt")

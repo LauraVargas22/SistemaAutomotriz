@@ -18,25 +18,25 @@ namespace Infrastructure.Configuration
 
             builder.Property(sp => sp.Code)
                 .HasMaxLength(20)
-                .HasColumnName("Code");
+                .HasColumnName("code");
 
             builder.Property(sp => sp.Description)
                 .HasMaxLength(50)
-                .HasColumnName("Description");
+                .HasColumnName("description");
 
             builder.Property(sp => sp.Stock)
-                .HasColumnName("Stock");
+                .HasColumnName("stock");
 
             builder.Property(sp => sp.MiniStock)
-                .HasColumnName("MiniStock");
+                .HasColumnName("min_stock");
 
             builder.Property(sp => sp.UnitPrice)
                 .HasColumnType("decimal(18,2)")
-                .HasColumnName("UnitPrice");
+                .HasColumnName("unit_price");
 
             builder.Property(sp => sp.Category)
                 .HasMaxLength(50)
-                .HasColumnName("Category");
+                .HasColumnName("category");
 
             builder.Property(e => e.CreatedAt)
                 .HasColumnName("createdAt")

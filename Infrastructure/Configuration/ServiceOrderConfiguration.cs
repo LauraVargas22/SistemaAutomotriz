@@ -22,9 +22,6 @@ namespace Infrastructure.Configuration
             builder.Property(so => so.TypeServiceId)
                 .HasColumnName("type_service_id");
 
-            builder.Property(so => so.ClientId)
-                .HasColumnName("client_id");
-
             builder.Property(so => so.StateId)
                 .HasColumnName("state_id");
 
@@ -57,10 +54,6 @@ namespace Infrastructure.Configuration
             builder.HasOne(so => so.State)
                 .WithMany(s => s.ServiceOrders)
                 .HasForeignKey(so => so.StateId);
-
-            builder.HasOne(so => so.Client)
-                .WithMany(c => c.ServiceOrders)
-                .HasForeignKey(so => so.ClientId);
 
             builder.HasOne(so => so.Invoices)
                 .WithOne(i => i.ServiceOrders)

@@ -17,7 +17,7 @@ namespace Infrastructure.Configuration
 
             builder.Property(s => s.Name)
                 .HasMaxLength(25)
-                .HasColumnName("Name");
+                .HasColumnName("name");
 
             builder.Property(e => e.CreatedAt)
                 .HasColumnName("createdAt")

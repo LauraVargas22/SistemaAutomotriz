@@ -8,7 +8,7 @@ namespace Infrastructure.Configuration
     {
         public void Configure(EntityTypeBuilder<Specialization> builder)
         {
-            builder.ToTable("Specializations");
+            builder.ToTable("specializations");
 
             // Clave primaria
             builder.HasKey(s => s.Id);
@@ -20,7 +20,8 @@ namespace Infrastructure.Configuration
             // Propiedades
             builder.Property(s => s.Name)
                    .IsRequired()
-                   .HasMaxLength(50);
+                   .HasMaxLength(50)
+                   .HasColumnName("name");
 
             builder.Property(e => e.CreatedAt)
                 .HasColumnName("createdAt")

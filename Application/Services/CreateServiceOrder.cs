@@ -35,13 +35,11 @@ namespace Application.Services
             {
                 VehiclesId = dto.Vehicle_id,
                 TypeServiceId = dto.Type_service_id,
-                ClientId = dto.Client_id,
                 StateId = dto.State_id,
                 EntryDate = dto.Entry_date,
                 ExitDate = exitDate,
                 IsAuthorized = false,
                 ClientMessage = dto.Client_message
-                // UserId puedes agregarlo aquí si tienes uno asignado en ese punto
             };
 
             _unitOfWork.ServiceOrderRepository.Add(serviceOrder);
