@@ -8,7 +8,7 @@ namespace Infrastructure.Configuration
     {
        public void Configure(EntityTypeBuilder<DetailsDiagnostic> builder)
         {
-            builder.ToTable("DetailsDiagnostics");
+            builder.ToTable("details_diagnostics");
 
             // Clave primaria compuesta
             builder.HasKey(dd => new { dd.ServiceOrderId, dd.DiagnosticId });

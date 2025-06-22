@@ -8,7 +8,7 @@ namespace Infrastructure.Configurations
     {
         public void Configure(EntityTypeBuilder<UserRol> builder)
         {
-            builder.ToTable("UserRoles");
+            builder.ToTable("user_roles");
 
             // Clave primaria compuesta
             builder.HasKey(ur => new { ur.UserId, ur.RolId });

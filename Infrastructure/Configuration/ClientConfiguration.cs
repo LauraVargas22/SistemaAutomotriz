@@ -13,27 +13,33 @@ namespace Infrastructure.Configuration
 
                      builder.Property(c => c.Name)
                             .IsRequired()
-                            .HasMaxLength(50);
+                            .HasMaxLength(50)
+                            .HasColumnName("name");
 
                      builder.Property(c => c.LastName)
                             .IsRequired()
-                            .HasMaxLength(50);
+                            .HasMaxLength(50)
+                            .HasColumnName("lastname");
 
                      builder.Property(c => c.Email)
                             .IsRequired()
-                            .HasMaxLength(50);
+                            .HasMaxLength(50)
+                            .HasColumnName("email");
 
                      builder.Property(c => c.Phone)
                             .IsRequired()
-                            .HasMaxLength(20);
+                            .HasMaxLength(20)
+                            .HasColumnName("phone");
 
                      builder.Property(c => c.Birth)
                             .IsRequired()
-                            .HasColumnType("timestamp");
+                            .HasColumnType("timestamp")
+                            .HasColumnName("birth");
 
                      builder.Property(c => c.Identification)
                             .IsRequired()
-                            .HasMaxLength(20);
+                            .HasMaxLength(20)
+                            .HasColumnName("identification");
 
                      builder.HasIndex(c => c.Identification).IsUnique();
 

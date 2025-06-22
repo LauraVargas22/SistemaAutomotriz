@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Domain.Entities;
 
 namespace Application.DTOs
 {
@@ -11,5 +12,6 @@ namespace Application.DTOs
         public string? Entity { get; set; }
         public DateTime Date { get; set; }
         public int UserId { get; set; }
+        public TypeAction TypeActions { get; set; }
     }
 }

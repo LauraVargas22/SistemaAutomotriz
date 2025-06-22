@@ -21,7 +21,8 @@ namespace Infrastructure.Configuration
 
                builder.Property(a => a.Entity)
                    .IsRequired()
-                   .HasMaxLength(50);
+                   .HasMaxLength(50)
+                   .HasColumnName("entity");
 
                builder.Property(a => a.Date)
                     .HasColumnName("date")
@@ -31,11 +32,12 @@ namespace Infrastructure.Configuration
 
                builder.Property(a => a.TypeAction)
                     .IsRequired()
-                    .HasConversion<string>();
+                    .HasConversion<string>()
+                    .HasColumnName("type_action");
 
                builder.Property(a => a.UserId)
                     .IsRequired()
-                    .HasColumnName("UserId");
+                    .HasColumnName("user_id");
 
                builder.Property(e => e.CreatedAt)
                     .HasColumnName("createdAt")
