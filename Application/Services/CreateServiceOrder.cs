@@ -4,7 +4,7 @@ using Domain.Entities;
 using Application.DTOs.CreateServiceOrderDto;
 using Application.Interfaces;
 
-namespace Application.UseCases
+namespace Application.Services
 {
     public class CreateServiceOrderUseCase
     {

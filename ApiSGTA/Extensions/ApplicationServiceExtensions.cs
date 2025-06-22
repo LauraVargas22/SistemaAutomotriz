@@ -8,6 +8,7 @@ using ApiSGTA.Helpers;
 using ApiSGTA.Helpers.Errors;
 using ApiSGTA.Services;
 using Application.Interfaces;
+using Application.Services;
 using Domain.Entities;
 using Infrastructure.UnitOfWork;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -32,6 +33,8 @@ namespace ApiSGTA.Extensions
             services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+            //Uses Cases
+            services.AddScoped<RegisterOrderDetailsService>();
         }
 
         public static IServiceCollection AddCustomRateLimiter(this IServiceCollection services)

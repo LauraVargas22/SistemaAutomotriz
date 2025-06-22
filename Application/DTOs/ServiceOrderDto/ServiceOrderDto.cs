@@ -10,11 +10,11 @@ namespace Application.DTOs
         public int Id { get; set; }
         public int Vehicles_Id { get; set; }
         public int TypeService_Id { get; set; }
-        public int Client_Id { get; set; }
         public int State_Id { get; set; }
         public DateTime EntryDate { get; set; }
         public DateTime ExitDate { get; set; }
         public bool IsAuthorized { get; set; }
         public string? ClientMessage { get; set; }
+        public int UserId { get; set; }
     }
 }

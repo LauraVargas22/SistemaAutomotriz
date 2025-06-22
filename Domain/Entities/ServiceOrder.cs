@@ -10,7 +10,6 @@ namespace Domain.Entities
         public int Id { get; set; }
         public int VehiclesId { get; set; }
         public int TypeServiceId { get; set; }
-        public int ClientId { get; set; }
         public int StateId { get; set; }
         public DateTime EntryDate { get; set; }
         public DateTime ExitDate { get; set; }
@@ -22,7 +21,6 @@ namespace Domain.Entities
         public State? State { get; set; }
         public TypeService? TypeService { get; set; }
         public Vehicle? Vehicle { get; set; }
-        public Client? Client { get; set; }
         public ICollection<DetailInspection> DetaillInspections { get; set; } = new HashSet<DetailInspection>();
         public ICollection<OrderDetails> OrderDetails { get; set; } = new HashSet<OrderDetails>();
 
