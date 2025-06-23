@@ -42,6 +42,10 @@ namespace Infrastructure.Configuration
                  .IsRequired()
                  .HasColumnName("client_id");
 
+            builder.Property(v => v.TypeVehicleId)
+                 .IsRequired()
+                 .HasColumnName("type_vehicle_id");
+
             // Relación muchos a uno hacia Client (se configura solo el lado dependiente aquí)
             builder.HasOne(c => c.Clients)
                    .WithMany(v => v.Vehicles)
@@ -58,6 +62,10 @@ namespace Infrastructure.Configuration
                 .HasColumnType("timestamp")
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .ValueGeneratedOnAddOrUpdate();
+
+            builder.HasOne(v => v.TypeVehicle)
+                .WithMany(tv => tv.Vehicles)
+                .HasForeignKey(v => v.TypeVehicleId);
         }
     }
 }

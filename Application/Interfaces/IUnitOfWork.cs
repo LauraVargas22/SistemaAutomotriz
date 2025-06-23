@@ -21,6 +21,7 @@ namespace Application.Interfaces
         ISpecializationRepository SpecializationRepository { get; }
         IStateRepository StateRepository { get; }
         ITypeServiceRepository TypeServiceRepository { get; }
+        ITypeVehicleRepository TypeVehicleRepository { get; }
         IUserRepository UserRepository { get; }
         IUserRolRepository UserRolRepository { get; }
         IUserSpecializationRepository UserSpecializationRepository { get; }

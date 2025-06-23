@@ -20,6 +20,7 @@ namespace Infrastructure.UnitOfWork
         private ISpecializationRepository? _specializationRepository;
         private IStateRepository? _stateRepository;
         private ITypeServiceRepository? _typeServiceRepository;
+        private ITypeVehicleRepository? _typeVehicleRepository;
         private IUserRepository? _userRepository;
         private IUserRolRepository? _userRolRepository;
         private IUserSpecializationRepository? _userSpecializationRepository;
@@ -258,6 +259,18 @@ namespace Infrastructure.UnitOfWork
                     _refreshToken = new RefreshTokenRepository(_context);
                 }
                 return _refreshToken;
+            }
+        }
+
+        public ITypeVehicleRepository TypeVehicleRepository
+        {
+            get
+            {
+                if (_typeVehicleRepository == null)
+                {
+                    _typeVehicleRepository = new TypeVehicleRepository(_context);
+                }
+                return _typeVehicleRepository;
             }
         }
 

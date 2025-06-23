@@ -26,6 +26,7 @@ namespace ApiSGTA.Profiles
             CreateMap<UserRol, UserRolDto>().ReverseMap();
             CreateMap<UserSpecialization, UserSpecializationDto>().ReverseMap();
             CreateMap<Vehicle, VehicleDto>().ReverseMap();
+            CreateMap<TypeVehicle, TypeVehicleDto>().ReverseMap();
         }
     }
 }

@@ -25,6 +25,7 @@ namespace Infrastructure.Data
         public DbSet<Specialization> Specialization { get; set; }
         public DbSet<State> State { get; set; }
         public DbSet<TypeService> TypeService { get; set; }
+        public DbSet<TypeVehicle> TypeVehicles { get; set; }
         public DbSet<User> User { get; set; }
         public DbSet<UserRol> UserRole { get; set; }
         public DbSet<UserSpecialization> UserSpecialization { get; set; }

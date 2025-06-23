@@ -13,6 +13,8 @@ namespace Domain.Entities
         public string? Model { get; set; }
         public string? VIN { get; set; }
         public int Mileage { get; set; }
+        public int TypeVehicleId { get; set; }
+        public TypeVehicle? TypeVehicle { get; set; }
 
         public Client? Clients { get; set; }
 
