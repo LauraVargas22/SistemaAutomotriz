@@ -48,13 +48,14 @@ VALUES ('Julian', 'Salazar', '3211234567', 'julian@gmail.com', '1992-04-30', '45
        ('Isa', 'Perez', '3224567890', 'isaperez@gmail.com', '1990-03-12', '9876543210'),
        ('Oscar', 'Vargas', '3123456789', 'oscarvargas@gmail.com', '1987-05-09', '6543219870');
 
+INSERT INTO type_vehicle(name) VALUES ('Carro'), ('Camioneta');
 -- Tabla: Vehicle
-INSERT INTO vehicles (client_id, brand, model, vin, mileage)
-VALUES (1, 'Renault', 'Logan', '111AAA222BBB333CCC', 45000),
-       (2, 'Hyundai', 'i10', '444DDD555EEE666FFF', 38000),
-       (3, 'Kia', 'Sportage', '777GGG888HHH999III', 15000),
-       (4, 'Chevrolet', 'Sail', 'ISA1234CARVIN9999', 23000),
-       (5, 'Mazda', '3', 'VINMAZDA333999AAA', 41000);
+INSERT INTO vehicles (client_id, brand, model, vin, mileage, type_vehicle_id)
+VALUES (1, 'Renault', 'Logan', '111AAA222BBB333CCC', 45000, 1),
+       (2, 'Hyundai', 'i10', '444DDD555EEE666FFF', 38000, 1),
+       (3, 'Kia', 'Sportage', '777GGG888HHH999III', 15000, 1),
+       (4, 'Chevrolet', 'Sail', 'ISA1234CARVIN9999', 23000, 2),
+       (5, 'Mazda', '3', 'VINMAZDA333999AAA', 41000, 2);
 
 -- Tabla: SpacePart (Repuestos)
 INSERT INTO spare_part (code, description, stock, unit_price, min_stock, max_stock, category)

@@ -19,9 +19,9 @@ namespace Infrastructure.Repositories
             _context = context;
         }
 
-        public Task<IEnumerable<UserSpecialization>> GetAllAsync()
+        public async Task<IEnumerable<UserSpecialization>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await _context.Set<UserSpecialization>().ToListAsync();
         }
 
         public async Task<UserSpecialization?> GetByIdsAsync(int specializationId, int userId)
@@ -33,12 +33,13 @@ namespace Infrastructure.Repositories
 
         public void Remove(UserSpecialization entity)
         {
-            throw new NotImplementedException();
+            _context.Set<UserSpecialization>().Remove(entity);
         }
 
         public void Update(UserSpecialization entity)
         {
-            throw new NotImplementedException();
+            _context.Set<UserSpecialization>()
+                .Update(entity);
         }
     }
 }

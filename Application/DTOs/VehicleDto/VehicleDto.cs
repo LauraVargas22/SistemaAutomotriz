@@ -13,6 +13,6 @@ namespace Application.DTOs
         public string? Model { get; set; }
         public string? VIN { get; set; }
         public int Mileage { get; set; }
-        public int TypeVehicle { get; set; }       
+        public int TypeVehicleId { get; set; }       
     }
 }

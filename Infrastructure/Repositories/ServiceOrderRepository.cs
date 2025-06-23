@@ -23,5 +23,11 @@ namespace Infrastructure.Repositories
             return await _context.ServiceOrder
                 .FirstOrDefaultAsync(so => so.Id == id) ?? throw new KeyNotFoundException($"Service Order with id {id} was not found");
         }
+
+        public async Task<bool> GetActiveOrdersByVehicleIdAsync(int vehicleId)
+        {
+            return await _context.ServiceOrder
+                    .AnyAsync(so => so.VehiclesId == vehicleId && (so.StateId == 2 || so.StateId == 3));
+        }           
     }
 }

@@ -18,9 +18,9 @@ namespace Infrastructure.Repositories
             _context = context;
         }
 
-        public Task<IEnumerable<DetailsDiagnostic>> GetAllAsync()
+        public async Task<IEnumerable<DetailsDiagnostic>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await _context.Set<DetailsDiagnostic>().ToListAsync();
         }
         public async Task<DetailsDiagnostic?> GetByIdsAsync(int diagnosticId, int serviceOrderId)
         {
@@ -31,12 +31,13 @@ namespace Infrastructure.Repositories
 
         public void Remove(DetailsDiagnostic entity)
         {
-            throw new NotImplementedException();
+            _context.Set<DetailsDiagnostic>().Remove(entity);
         }
 
         public void Update(DetailsDiagnostic entity)
         {
-            throw new NotImplementedException();
+            _context.Set<DetailsDiagnostic>()
+                .Update(entity);
         }
     }
 }
