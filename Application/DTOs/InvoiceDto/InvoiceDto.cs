@@ -11,5 +11,6 @@ namespace Application.DTOs
         public int ServiceOrder_Id { get; set; }
         public decimal TotalPrice { get; set; }
         public DateTime Date { get; set; }
+        public string? Code { get; set; }
     }
 }

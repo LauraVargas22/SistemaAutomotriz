@@ -50,6 +50,14 @@ namespace Infrastructure.Configuration
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .ValueGeneratedOnAddOrUpdate();
 
+                builder.Property(sp => sp.MaxStock)
+                     .HasColumnName("max_stock");
+
+                builder.HasMany(sp => sp.OrderDetails)
+                    .WithOne(od => od.SpareParts)
+                    .HasForeignKey(od => od.SparePartId);
+
+
         }
     }
 }

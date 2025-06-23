@@ -25,6 +25,10 @@ namespace Infrastructure.Configuration
                             .IsRequired()
                             .HasColumnName("user_id");
 
+                     builder.Property(d => d.Date)
+                            .IsRequired()
+                            .HasColumnName("date");
+
                      // Relaciones
 
                      builder.HasOne(d => d.User)

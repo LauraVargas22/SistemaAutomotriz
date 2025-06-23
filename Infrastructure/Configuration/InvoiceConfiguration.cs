@@ -35,6 +35,18 @@ namespace Infrastructure.Configuration
                 .HasColumnType("timestamp")
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .ValueGeneratedOnAddOrUpdate();
+
+            builder.Property(i => i.Code)
+                .HasMaxLength(20)
+                .HasColumnName("code");
+
+            builder.Property(i => i.ServiceOrderId)
+                .HasColumnName("service_order_id");
+
+            builder.HasOne(i => i.ServiceOrders)
+                .WithOne(s => s.Invoices)
+                .HasForeignKey<Invoice>(i => i.ServiceOrderId);
+
         }
     }
 }
