@@ -33,8 +33,12 @@ namespace ApiSGTA.Extensions
             services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
-            //Uses Cases
             services.AddScoped<RegisterOrderDetailsService>();
+
+            // New Services
+            services.AddScoped<CreateServiceOrderService>();
+            services.AddScoped<UpdateServiceOrderService>();
+
         }
 
         public static IServiceCollection AddCustomRateLimiter(this IServiceCollection services)
