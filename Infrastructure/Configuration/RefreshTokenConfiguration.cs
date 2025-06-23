@@ -11,46 +11,41 @@ namespace Infrastructure.Configuration
             builder.ToTable("refresh_tokens");
 
             builder.HasKey(e => e.Id);
-            builder.Property(e => e.Id)
-            .HasColumnName("id");
+            builder.Property(e => e.Id).HasColumnName("id");
+
+            builder.Property(e => e.UserMemberId)
+                   .HasColumnName("user_member_id")
+                   .IsRequired();
 
             builder.Property(e => e.Token)
-            .HasColumnName("token")
-            .HasColumnType("text");
+                   .HasColumnName("token")
+                   .HasColumnType("text");
 
             builder.Property(e => e.Expires)
-            .HasColumnName("expire")
-            .HasColumnType("timestamp")
-            .HasDefaultValueSql("CURRENT_TIMESTAMP")
-            .ValueGeneratedOnAdd();
+                   .HasColumnName("expires")
+                   .HasColumnType("timestamp");
 
             builder.Property(e => e.Created)
-            .HasColumnName("created")
-            .HasColumnType("timestamp")
-            .HasDefaultValueSql("CURRENT_TIMESTAMP")
-            .ValueGeneratedOnAdd();
+                   .HasColumnName("created")
+                   .HasColumnType("timestamp");
 
             builder.Property(e => e.Revoked)
-            .HasColumnName("revoked")
-            .HasColumnType("timestamp")
-            .HasDefaultValueSql("CURRENT_TIMESTAMP")
-            .ValueGeneratedOnAdd();
+                   .HasColumnName("revoked")
+                   .HasColumnType("timestamp");
 
             builder.Property(e => e.CreatedAt)
-                .HasColumnName("createdAt")
-                .HasColumnType("timestamp")
-                .HasDefaultValueSql("CURRENT_TIMESTAMP")
-                .ValueGeneratedOnAdd();
+                   .HasColumnName("created_at")
+                   .HasColumnType("timestamp")
+                   .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
             builder.Property(e => e.UpdatedAt)
-                .HasColumnName("updatedAt")
-                .HasColumnType("timestamp")
-                .HasDefaultValueSql("CURRENT_TIMESTAMP")
-                .ValueGeneratedOnAddOrUpdate();
+                   .HasColumnName("updated_at")
+                   .HasColumnType("timestamp")
+                   .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
             builder.HasOne(e => e.User)
-                .WithMany(m => m.RefreshTokens)
-                .HasForeignKey(e => e.UserMemberId);
+                   .WithMany(u => u.RefreshTokens)
+                   .HasForeignKey(e => e.UserMemberId);
         }
     }
 }

@@ -6,11 +6,14 @@ using Infrastructure.UnitOfWork;
 using Application.Interfaces;
 using Microsoft.OpenApi.Models;
 using ApiSGTA.Extensions;
+using ApiSGTA.Helpers;
+
 using Microsoft.AspNetCore.RateLimiting;
 using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.Configure<JWT>(builder.Configuration.GetSection("JWT"));
 builder.Services.AddAutoMapper(Assembly.GetEntryAssembly());
 builder.Services.ConfigureCors();
 builder.Services.AddApplicationServices();
