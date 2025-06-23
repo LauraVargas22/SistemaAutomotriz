@@ -8,6 +8,8 @@ using Application.DTOs;
 using AutoMapper;
 using Application.Services;
 using ApiSGTA.Helpers.Errors;
+using Application.DTOs.CreateServiceOrderDto;
+
 
 namespace ApiSGTA.Controllers
 {
@@ -16,12 +18,16 @@ namespace ApiSGTA.Controllers
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly RegisterOrderDetailsService _registerOrderDetails;
+        private readonly CreateServiceOrderService _createServiceOrderService;
+        private readonly UpdateServiceOrderService _updateServiceOrderService;
 
-        public ServiceOrderController(IUnitOfWork unitOfWork, IMapper mapper, RegisterOrderDetailsService registerOrderDetails)
+        public ServiceOrderController(IUnitOfWork unitOfWork, IMapper mapper, RegisterOrderDetailsService registerOrderDetails, CreateServiceOrderService createServiceOrderService, UpdateServiceOrderService updateServiceOrderService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _registerOrderDetails = registerOrderDetails;
+            _createServiceOrderService = createServiceOrderService;
+            _updateServiceOrderService = updateServiceOrderService;
         }
 
         [HttpGet]
@@ -46,35 +52,44 @@ namespace ApiSGTA.Controllers
             return _mapper.Map<ServiceOrderDto>(serviceOrder);
         }
 
+        // Implementation of CreateServiceOrderService
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<ServiceOrder>> Post(ServiceOrderDto serviceOrderDto)
+        public async Task<IActionResult> Post([FromBody] CreateServiceOrderDto dto)
         {
-            var serviceOrder = _mapper.Map<ServiceOrder>(serviceOrderDto);
-            _unitOfWork.ServiceOrderRepository.Add(serviceOrder);
-            await _unitOfWork.SaveAsync();
-            if (serviceOrderDto == null)
+            try
             {
-                return BadRequest();
+                var newOrderId = await _createServiceOrderService.ExecuteAsync(dto);
+                return CreatedAtAction(nameof(Get), new { id = newOrderId }, new { id = newOrderId });
             }
-            return CreatedAtAction(nameof(Post), new { id = serviceOrderDto.Id }, serviceOrder);
+            catch (Exception ex)
+            {
+                return BadRequest(new ApiResponse(400, ex.Message));
+            }
         }
 
+        // Implementation of UpdateServiceOrderService
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Put(int id, [FromBody] ServiceOrderDto serviceOrderDto)
+        public async Task<IActionResult> Put(int id, [FromBody] UpdateServiceOrderDto dto)
         {
-            if (serviceOrderDto == null)
-                return NotFound();
+            if (dto == null || id != dto.Id)
+                return BadRequest(new ApiResponse(400, "ID inválido."));
 
-            var serviceOrder = _mapper.Map<ServiceOrder>(serviceOrderDto);
-            _unitOfWork.ServiceOrderRepository.Update(serviceOrder);
-            await _unitOfWork.SaveAsync();
-            return Ok(serviceOrderDto);
+            try
+            {
+                await _updateServiceOrderService.ExecuteAsync(dto);
+                return Ok(new { message = "Orden de servicio actualizada correctamente." });
+            }
+            catch (Exception ex)
+            {
+                return NotFound(new ApiResponse(404, ex.Message));
+            }
         }
+
 
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]

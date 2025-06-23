@@ -6,11 +6,11 @@ using Application.Interfaces;
 
 namespace Application.Services
 {
-    public class CreateServiceOrderUseCase
+    public class CreateServiceOrderService
     {
         private readonly IUnitOfWork _unitOfWork;
 
-        public CreateServiceOrderUseCase(IUnitOfWork unitOfWork)
+        public CreateServiceOrderService(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
