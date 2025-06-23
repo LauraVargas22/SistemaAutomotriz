@@ -18,9 +18,9 @@ namespace Infrastructure.Repositories
             _context = context;
         }
 
-        public Task<IEnumerable<UserRol>> GetAllAsync()
+        public async Task<IEnumerable<UserRol>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await _context.Set<UserRol>().ToListAsync();
         }
 
         public async Task<UserRol?> GetByIdsAsync(int userId, int rolId)
@@ -32,12 +32,13 @@ namespace Infrastructure.Repositories
 
         public void Remove(UserRol entity)
         {
-            throw new NotImplementedException();
+             _context.Set<UserRol>().Remove(entity);
         }
 
         public void Update(UserRol entity)
         {
-            throw new NotImplementedException();
+            _context.Set<UserRol>()
+                .Update(entity);
         }
     }
 }

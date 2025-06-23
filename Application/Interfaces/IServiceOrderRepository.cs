@@ -8,6 +8,7 @@ namespace Application.Interfaces
 {
     public interface IServiceOrderRepository : IGenericRepository<ServiceOrder>
     {
-        
+        Task<bool> GetActiveOrdersByVehicleIdAsync(int vehicleId);
+        Task<IEnumerable<ServiceOrder>> GetActiveOrdersByClientIdAsync(int clientId);
     }
 }

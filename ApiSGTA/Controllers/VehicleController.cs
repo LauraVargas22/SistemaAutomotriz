@@ -66,6 +66,13 @@ namespace ApiSGTA.Controllers
             if (vehicleDto == null)
                 return NotFound();
 
+            var hasActiveOrders = await _unitOfWork.ServiceOrderRepository.GetActiveOrdersByVehicleIdAsync(id);
+
+            if (hasActiveOrders)
+            {
+                return Conflict("No se puede editar el vehículo porque tiene órdenes de servicio activas.");
+            }
+
             var vehicle = _mapper.Map<Vehicle>(vehicleDto);
             _unitOfWork.VehicleRepository.Update(vehicle);
             await _unitOfWork.SaveAsync();
@@ -80,6 +87,13 @@ namespace ApiSGTA.Controllers
             var vehicle = await _unitOfWork.VehicleRepository.GetByIdAsync(id);
             if (vehicle == null)
                 return NotFound();
+
+            var hasActiveOrders = await _unitOfWork.ServiceOrderRepository.GetActiveOrdersByVehicleIdAsync(id);
+
+            if (hasActiveOrders)
+            {
+                return Conflict("No se puede eliminar el vehículo porque tiene órdenes de servicio activas.");
+            }
 
             _unitOfWork.VehicleRepository.Remove(vehicle);
             await _unitOfWork.SaveAsync();

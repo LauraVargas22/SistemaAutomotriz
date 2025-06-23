@@ -67,6 +67,13 @@ namespace ApiSGTA.Controllers
             if (clientDto == null)
                 return NotFound();
 
+            var hasActiveOrders = await _unitOfWork.ServiceOrderRepository.GetActiveOrdersByClientIdAsync(id);
+
+            if (hasActiveOrders.Any())
+            {
+                return Conflict("No se puede editar el cliente porque tiene órdenes de servicio activas.");
+            }
+
             var clients = _mapper.Map<Client>(clientDto);
             _unitOfWork.ClientRepository.Update(clients);
             await _unitOfWork.SaveAsync();
@@ -81,6 +88,13 @@ namespace ApiSGTA.Controllers
             var client = await _unitOfWork.ClientRepository.GetByIdAsync(id);
             if (client == null)
                 return NotFound();
+
+            var hasActiveOrders = await _unitOfWork.ServiceOrderRepository.GetActiveOrdersByClientIdAsync(id);
+
+            if (hasActiveOrders.Any())
+            {
+                return Conflict("No se puede eliminar el cliente porque tiene órdenes de servicio activas.");
+            }
 
             _unitOfWork.ClientRepository.Remove(client);
             await _unitOfWork.SaveAsync();
