@@ -224,7 +224,7 @@ namespace ApiSGTA.Services
             var roleClaims = new List<Claim>();
             foreach (var role in roles)
             {
-                roleClaims.Add(new Claim("roles", role.Description));
+                roleClaims.Add(new Claim(ClaimTypes.Role, role.Description));
             }
             var claims = new[]
             {
