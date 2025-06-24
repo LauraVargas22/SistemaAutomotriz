@@ -30,6 +30,23 @@ namespace ApiSGTA.Controllers
             return _mapper.Map<List<SparePartDto>>(spareParts);
         }
 
+        [HttpGet("paginated")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<IEnumerable<SparePartDto>>> GetPaginated(
+            [FromQuery] int pageNumber = 1,
+            [FromQuery] int pageSize = 10,
+            [FromQuery] string search = "")
+        {
+            var (totalRegisters, registers) = await _unitOfWork.SparePartRepository.GetAllAsync(pageNumber, pageSize, search);
+            var sparePartDtos = _mapper.Map<List<SparePartDto>>(registers);
+            
+            // Agregar X-Total-Count en los encabezados HTTP
+            Response.Headers.Add("X-Total-Count", totalRegisters.ToString());
+            
+            return Ok(sparePartDtos);
+        }
+
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

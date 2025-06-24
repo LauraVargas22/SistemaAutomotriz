@@ -36,7 +36,7 @@ namespace Infrastructure.Repositories
 
             if (!String.IsNullOrEmpty(search))
             {
-                consulta = consulta.Where(c => c.Name.Contains(search, StringComparison.CurrentCultureIgnoreCase));
+                consulta = consulta.Where(c => EF.Functions.Like(c.Name.ToLower(), $"%{search.ToLower()}%"));
             }
 
             var totalRegisters = await consulta.CountAsync();

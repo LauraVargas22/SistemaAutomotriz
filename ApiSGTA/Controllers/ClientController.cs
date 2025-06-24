@@ -8,6 +8,7 @@ using Application.DTOs;
 using AutoMapper;
 using Application.Services;
 using Application.DTOs.RegisterClientWithVehicleDto;
+using ApiSGTA.Helpers;
 
 namespace ApiSGTA.Controllers
 {
@@ -127,6 +128,23 @@ namespace ApiSGTA.Controllers
             {
                 return Conflict(ex.Message);
             }
+        }
+
+        [HttpGet("paginated")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<IEnumerable<ClientDto>>> GetPaginated(
+            [FromQuery] int pageNumber = 1,
+            [FromQuery] int pageSize = 10,
+            [FromQuery] string search = "")
+        {
+            var (totalRegisters, registers) = await _unitOfWork.ClientRepository.GetAllAsync(pageNumber, pageSize, search);
+            var clientDtos = _mapper.Map<List<ClientDto>>(registers);
+            
+            // Agregar X-Total-Count en los encabezados HTTP
+            Response.Headers.Add("X-Total-Count", totalRegisters.ToString());
+            
+            return Ok(clientDtos);
         }
     }
 }
