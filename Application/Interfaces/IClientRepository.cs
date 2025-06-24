@@ -8,6 +8,6 @@ namespace Application.Interfaces
 {
     public interface IClientRepository : IGenericRepository<Client>
     {
-        
+        Task<Client?> GetByIdentificationAsync(string identification);
     }
 }

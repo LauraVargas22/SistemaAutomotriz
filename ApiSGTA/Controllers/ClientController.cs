@@ -6,7 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using ApiSGTA.Controllers;
 using Application.DTOs;
 using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
+using Application.Services;
+using Application.DTOs.RegisterClientWithVehicleDto;
 
 namespace ApiSGTA.Controllers
 {
@@ -17,8 +18,10 @@ namespace ApiSGTA.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly RegisterClientWithVehicleService _registerClientWithVehicleService;
 
-        public ClientController(IUnitOfWork unitOfWork, IMapper mapper)
+
+        public ClientController(IUnitOfWork unitOfWork, IMapper mapper, RegisterClientWithVehicleService registerClientWithVehicleService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -105,5 +108,26 @@ namespace ApiSGTA.Controllers
 
             return NoContent();
         }
-    }
+
+        [HttpPost("register-with-vehicles")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        public async Task<ActionResult> RegisterClientWithVehicles([FromBody] RegisterClientWithVehicleDto dto)
+        {
+            if (dto == null)
+                return BadRequest("Datos inválidos.");
+
+            try
+            {
+                var clientId = await _registerClientWithVehicleService.ExecuteAsync(dto);
+                return CreatedAtAction(nameof(Get), new { id = clientId }, new { message = "Cliente creado con éxito", clientId });
+            }
+            catch (Exception ex)
+            {
+                return Conflict(ex.Message);
+            }
+        }
+
+            }
 }
