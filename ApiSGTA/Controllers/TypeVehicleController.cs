@@ -1,14 +1,14 @@
 using System;
 using Application.Interfaces;
 using Domain.Entities;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using ApiSGTA.Controllers;
 using Application.DTOs;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ApiSGTA.Controllers
 {
+    [Authorize(Roles = "Mechanic")]
     public class TypeVehicleController : BaseApiController
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -47,13 +47,13 @@ namespace ApiSGTA.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<TypeVehicle>> Post(TypeVehicleDto typeVehicleDto)
         {
+            if (typeVehicleDto == null)
+                return BadRequest();
+
             var typeVehicles = _mapper.Map<TypeVehicle>(typeVehicleDto);
             _unitOfWork.TypeVehicleRepository.Add(typeVehicles);
             await _unitOfWork.SaveAsync();
-            if (typeVehicleDto == null)
-            {
-                return BadRequest();
-            }
+
             return CreatedAtAction(nameof(Post), new { id = typeVehicleDto.Id }, typeVehicles);
         }
 
@@ -69,6 +69,7 @@ namespace ApiSGTA.Controllers
             var typeVehicle = _mapper.Map<TypeVehicle>(typeVehicleDto);
             _unitOfWork.TypeVehicleRepository.Update(typeVehicle);
             await _unitOfWork.SaveAsync();
+
             return Ok(typeVehicleDto);
         }
 
