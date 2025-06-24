@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using ApiSGTA.Controllers;
 using Application.DTOs;
 using AutoMapper;
+using ApiSGTA.Helpers.Errors;
 
 namespace ApiSGTA.Controllers
 {
@@ -86,5 +87,61 @@ namespace ApiSGTA.Controllers
 
             return NoContent();
         }
+
+        /// <summary>
+        /// Alta de repuestos agregar nuevo repuesto al inventario
+        /// </summary>
+        [HttpPost("add")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> AddSparePart([FromBody] SparePartDto sparePartDto)
+        {
+            if (sparePartDto == null)
+                return BadRequest(new ApiResponse(400, "Datos de repuesto inválidos."));
+
+            var sparePart = _mapper.Map<SparePart>(sparePartDto);
+            _unitOfWork.SparePartRepository.Add(sparePart);
+            await _unitOfWork.SaveAsync();
+
+            return CreatedAtAction(nameof(Get), new { id = sparePart.Id }, _mapper.Map<SparePartDto>(sparePart));
+        }
+
+        /// <summary>
+        /// Actualización de stock de un repuesto
+        /// </summary>
+        [HttpPatch("{id}/stock")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> UpdateStock(int id, [FromBody] int newStock)
+        {
+            var sparePart = await _unitOfWork.SparePartRepository.GetByIdAsync(id);
+            if (sparePart == null)
+                return NotFound(new ApiResponse(404, $"Spare Part with id {id} was not found."));
+
+            sparePart.Stock = newStock;
+            _unitOfWork.SparePartRepository.Update(sparePart);
+            await _unitOfWork.SaveAsync();
+
+            return Ok(_mapper.Map<SparePartDto>(sparePart));
+        }
+
+        /// <summary>
+        /// Baja de repuestos obsoletos eliminar repuesto
+        /// </summary>
+        [HttpDelete("obsolete/{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> DeleteObsolete(int id)
+        {
+            var sparePart = await _unitOfWork.SparePartRepository.GetByIdAsync(id);
+            if (sparePart == null)
+                return NotFound(new ApiResponse(404, $"Spare Part with id {id} was not found."));
+
+            _unitOfWork.SparePartRepository.Remove(sparePart);
+            await _unitOfWork.SaveAsync();
+
+            return NoContent();
+        }
+
     }
 }
