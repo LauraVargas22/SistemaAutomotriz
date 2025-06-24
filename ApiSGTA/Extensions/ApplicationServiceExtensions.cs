@@ -40,6 +40,7 @@ namespace ApiSGTA.Extensions
             services.AddScoped<CreateServiceOrderService>();
             services.AddScoped<UpdateServiceOrderService>();
             services.AddScoped<GenerateInvoice>();
+            services.AddScoped<RegisterClientWithVehicleService>();
 
             //Interceptor
             services.AddSingleton<AuditInterceptor>();

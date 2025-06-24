@@ -15,10 +15,10 @@ namespace Application.DTOs.RegisterClientWithVehicleDto
         public string? Identification { get; set; }
 
         // Lista de vehículos que se van a registrar para ese cliente
-        public List<VehicleDto> Vehicles { get; set; } = new();
+        public List<RegisterVehicleDto> Vehicles { get; set; } = new();
     }
 
-    public class VehicleDto
+    public class RegisterVehicleDto
     {
         public string? Brand { get; set; }
         public string? Model { get; set; }

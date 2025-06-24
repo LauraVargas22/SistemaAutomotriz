@@ -33,10 +33,23 @@ namespace Infrastructure.Repositories
         {
             return _context.Set<T>().Where(expression);
         }
-    
+
         public virtual async Task<IEnumerable<T>> GetAllAsync()
         {
             return await _context.Set<T>().ToListAsync();
+        }
+
+        public virtual async Task<(int totalRegisters, IEnumerable<T> registers)> GetAllAsync(int pageIndex, int pageSize, string search)
+        {
+            var totalRegisters = await _context.Set<T>()
+                                        .CountAsync();
+
+            var registers = await _context.Set<T>()
+                                    .Skip((pageIndex - 1) * pageSize)
+                                    .Take(pageSize)
+                                    .ToListAsync();
+
+            return (totalRegisters, registers);
         }
     
         public virtual async Task<T> GetByIdAsync(int id)

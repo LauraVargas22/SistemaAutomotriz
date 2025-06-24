@@ -34,9 +34,12 @@ namespace Application.Services
                 Identification = dto.Identification!
             };
 
+
             _unitOfWork.ClientRepository.Add(client);
             await _unitOfWork.SaveAsync();
 
+            int clientId = client.Id;
+            
             foreach (var v in dto.Vehicles)
             {
                 // Validar que el tipo de vehículo existe
@@ -50,7 +53,7 @@ namespace Application.Services
                     Model = v.Model!,
                     VIN = v.VIN!,
                     Mileage = v.Mileage,
-                    ClientId = client.Id,
+                    ClientId = clientId,
                     TypeVehicleId = v.TypeVehicleId
                 };
 
