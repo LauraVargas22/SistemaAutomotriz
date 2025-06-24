@@ -33,6 +33,23 @@ namespace ApiSGTA.Controllers
             return _mapper.Map<List<InvoiceDto>>(invoices);
         }
 
+        [HttpGet("paginated")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<IEnumerable<InvoiceDto>>> GetPaginated(
+            [FromQuery] int pageNumber = 1,
+            [FromQuery] int pageSize = 10,
+            [FromQuery] string search = "")
+        {
+            var (totalRegisters, registers) = await _unitOfWork.InvoiceRepository.GetAllAsync(pageNumber, pageSize, search);
+            var invoiceDtos = _mapper.Map<List<InvoiceDto>>(registers);
+            
+            // Agregar X-Total-Count en los encabezados HTTP
+            Response.Headers.Add("X-Total-Count", totalRegisters.ToString());
+            
+            return Ok(invoiceDtos);
+        }
+
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
