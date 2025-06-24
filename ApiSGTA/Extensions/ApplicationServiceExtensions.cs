@@ -10,6 +10,7 @@ using ApiSGTA.Services;
 using Application.Interfaces;
 using Application.Services;
 using Domain.Entities;
+using Infrastructure.Interceptors;
 using Infrastructure.UnitOfWork;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -39,6 +40,8 @@ namespace ApiSGTA.Extensions
             services.AddScoped<CreateServiceOrderService>();
             services.AddScoped<UpdateServiceOrderService>();
 
+            //Interceptor
+            services.AddSingleton<AuditInterceptor>();
         }
 
         public static IServiceCollection AddCustomRateLimiter(this IServiceCollection services)

@@ -5,12 +5,17 @@ using System.Threading.Tasks;
 using System.Reflection;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using Infrastructure.Interceptors;
 
 namespace Infrastructure.Data
 {
     public class AutoTallerDbContext : DbContext
     {
-        public AutoTallerDbContext(DbContextOptions<AutoTallerDbContext> options) : base(options) {}
+        private readonly AuditInterceptor _auditInterceptor;
+        public AutoTallerDbContext(DbContextOptions<AutoTallerDbContext> options, AuditInterceptor auditInterceptor) : base(options)
+        {
+            _auditInterceptor = auditInterceptor;
+        }
 
         public DbSet<Auditory> Auditory { get; set; }
         public DbSet<Client> Client { get; set; }
@@ -32,11 +37,16 @@ namespace Infrastructure.Data
         public DbSet<Vehicle> Vehicle { get; set; }
         public DbSet<DetailsDiagnostic> DetailsDiagnostics { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
-        
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.AddInterceptors(_auditInterceptor);
         }
         
     }
