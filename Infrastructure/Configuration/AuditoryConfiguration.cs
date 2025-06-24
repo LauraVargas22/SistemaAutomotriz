@@ -19,10 +19,10 @@ namespace Infrastructure.Configuration
 
                // Propiedades
 
-               builder.Property(a => a.Entity)
+               builder.Property(a => a.EntityName)
                    .IsRequired()
                    .HasMaxLength(50)
-                   .HasColumnName("entity");
+                   .HasColumnName("entity_name");
 
                builder.Property(a => a.Date)
                     .HasColumnName("date")
@@ -30,14 +30,13 @@ namespace Infrastructure.Configuration
                     .HasDefaultValueSql("CURRENT_TIMESTAMP")
                     .ValueGeneratedOnAddOrUpdate();
 
-               builder.Property(a => a.TypeAction)
+               builder.Property(a => a.ChangeType)
                     .IsRequired()
-                    .HasConversion<string>()
-                    .HasColumnName("type_action");
+                    .HasColumnName("change_type");
 
-               builder.Property(a => a.UserId)
+               builder.Property(a => a.ChangedBy)
                     .IsRequired()
-                    .HasColumnName("user_id");
+                    .HasColumnName("user");
 
                builder.Property(e => e.CreatedAt)
                     .HasColumnName("createdAt")
@@ -50,11 +49,6 @@ namespace Infrastructure.Configuration
                     .HasColumnType("timestamp")
                     .HasDefaultValueSql("CURRENT_TIMESTAMP")
                     .ValueGeneratedOnAddOrUpdate();
-
-               // Relaciones
-               builder.HasOne(a => a.User)
-                      .WithMany(u => u.Auditories)
-                      .HasForeignKey(a => a.UserId);
           }
      }
 }

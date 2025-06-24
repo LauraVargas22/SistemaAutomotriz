@@ -9,42 +9,20 @@ using ApiSGTA.Extensions;
 using ApiSGTA.Helpers;
 using Microsoft.AspNetCore.RateLimiting;
 using System.Threading.RateLimiting;
-
 // New
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using Infrastructure.Data; 
-
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.Configure<JWT>(builder.Configuration.GetSection("JWT"));
-builder.Services.AddAutoMapper(Assembly.GetEntryAssembly());
 builder.Services.ConfigureCors();
+builder.Services.AddAutoMapper(Assembly.GetEntryAssembly());
 builder.Services.AddApplicationServices();
 builder.Services.AddCustomRateLimiter();
-
-var jwtSettings = builder.Configuration.GetSection("JWT").Get<JWT>();
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
-    {
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-            ValidIssuer = jwtSettings!.Issuer,
-            ValidAudience = jwtSettings!.Audience,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key!))
-        };
-    });
-
-builder.Services.AddAuthorization();
-
-
+builder.Services.AddJwt(builder.Configuration);
 builder.Services.AddControllers();
+
 builder.Services.AddEndpointsApiExplorer();
 // This method records Swagger
 builder.Services.AddSwaggerGen(c =>

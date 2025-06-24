@@ -6,9 +6,13 @@ using Microsoft.AspNetCore.Mvc;
 using ApiSGTA.Controllers;
 using Application.DTOs;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ApiSGTA.Controllers
 {
+    // [Authorize(Policy = "AdminOnly")]
+    // [ApiController]
+    // [Route("[controller]")]
     public class ClientController : BaseApiController
     {
         private readonly IUnitOfWork _unitOfWork;

@@ -5,20 +5,12 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities
 {
-    public enum TypeAction
-        {
-            Create,
-            Update,
-            Delete
-        }
     public class Auditory : BaseEntity
     {
         public int Id { get; set; }
-        public string? Entity { get; set; }
+        public string? EntityName { get; set; }
+        public string? ChangeType { get; set; }
+        public string? ChangedBy { get; set; }
         public DateTime Date { get; set; }
-        public TypeAction TypeAction { get; set; }
-
-        public int UserId { get; set; }
-        public User? User { get; set; }
     }
 }
