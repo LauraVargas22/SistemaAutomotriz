@@ -13,7 +13,8 @@ using System.Threading.RateLimiting;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using ApiSGTA.Helpers;
+
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,22 +26,60 @@ builder.Services.AddJwt(builder.Configuration);
 builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
+
 // This method records Swagger
 builder.Services.AddSwaggerGen(c =>
 {
-    //SwaggerDoc define la documentación de la API, "v1" es el identificador de la versión de la API, OpenApiInfo contiene la información general de la API.
-    c.SwaggerDoc("v1", new OpenApiInfo
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Mi API", Version = "v1" });
+
+    // Configuramos cómo se ve el botón "Authorize" en Swagger
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
-        Title = "Project SGTA",
-        Version = "v1",
-        Description = "API SGTA",
-        Contact = new OpenApiContact
+        Description = "Poné tu token así: Bearer {token}",
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer"
+    });
+
+    // Obligamos a que Swagger use esta seguridad por default
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
         {
-            Name = "Grupo",
-            Email = ""
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            new string[] {}
         }
     });
 });
+
+
+var secretKey = builder.Configuration["Jwt:Key"];
+
+builder.Services.AddAuthentication("Bearer")
+    .AddJwtBearer("Bearer", options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidAudience = builder.Configuration["Jwt:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
+        };
+    });
+
+// Activamos autorización en general
+builder.Services.AddAuthorization();
+
 
 builder.Services.AddDbContext<AutoTallerDbContext>(options =>
 {

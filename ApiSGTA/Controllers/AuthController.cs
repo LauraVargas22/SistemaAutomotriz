@@ -8,11 +8,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ApiSGTA.Controllers;
 
-public class UsersController : BaseApiController
+public class AuthController : BaseApiController
 {
     private readonly IUserService _userService;
 
-    public UsersController(IUserService userService)
+    public AuthController(IUserService userService)
     {
         _userService = userService;
     }
