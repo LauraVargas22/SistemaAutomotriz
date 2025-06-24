@@ -1,5 +1,5 @@
 using Domain.Entities;
-using ApiSGTA.Helpers; // ✅ Aquí está el archivo JWT.cs
+using ApiSGTA.Helpers; 
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;

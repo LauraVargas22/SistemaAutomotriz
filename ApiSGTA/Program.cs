@@ -7,9 +7,15 @@ using Application.Interfaces;
 using Microsoft.OpenApi.Models;
 using ApiSGTA.Extensions;
 using ApiSGTA.Helpers;
-
 using Microsoft.AspNetCore.RateLimiting;
 using System.Threading.RateLimiting;
+
+// New
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Infrastructure.Data; 
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +24,24 @@ builder.Services.AddAutoMapper(Assembly.GetEntryAssembly());
 builder.Services.ConfigureCors();
 builder.Services.AddApplicationServices();
 builder.Services.AddCustomRateLimiter();
+
+var jwtSettings = builder.Configuration.GetSection("JWT").Get<JWT>();
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = jwtSettings!.Issuer,
+            ValidAudience = jwtSettings!.Audience,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key!))
+        };
+    });
+
+builder.Services.AddAuthorization();
 
 
 builder.Services.AddControllers();
@@ -66,8 +90,8 @@ app.UseCors("CorsPolicy");
 
 app.UseHttpsRedirection();
 app.UseRateLimiter();
-app.UseAuthorization();
 app.UseAuthentication();
+app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
