@@ -22,7 +22,6 @@ builder.Services.ConfigureCors();
 builder.Services.AddAutoMapper(Assembly.GetEntryAssembly());
 builder.Services.AddApplicationServices();
 builder.Services.AddCustomRateLimiter();
-builder.Services.AddJwt(builder.Configuration);
 builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
@@ -60,10 +59,12 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 
-var secretKey = builder.Configuration["Jwt:Key"];
+var jwtSection = builder.Configuration.GetSection("JWT");
+var secretKey = jwtSection["Key"];
 
-builder.Services.AddAuthentication("Bearer")
-    .AddJwtBearer("Bearer", options =>
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
     {
         options.TokenValidationParameters = new TokenValidationParameters
         {

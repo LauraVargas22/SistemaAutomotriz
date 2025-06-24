@@ -10,7 +10,6 @@ using Application.Services;
 using ApiSGTA.Helpers.Errors;
 using Application.DTOs.CreateServiceOrderDto;
 
-
 namespace ApiSGTA.Controllers
 {
     public class ServiceOrderController : BaseApiController
@@ -20,14 +19,16 @@ namespace ApiSGTA.Controllers
         private readonly RegisterOrderDetailsService _registerOrderDetails;
         private readonly CreateServiceOrderService _createServiceOrderService;
         private readonly UpdateServiceOrderService _updateServiceOrderService;
+        private readonly DeleteServiceOrderService _deleteServiceOrderService;
 
-        public ServiceOrderController(IUnitOfWork unitOfWork, IMapper mapper, RegisterOrderDetailsService registerOrderDetails, CreateServiceOrderService createServiceOrderService, UpdateServiceOrderService updateServiceOrderService)
+        public ServiceOrderController(IUnitOfWork unitOfWork, IMapper mapper, RegisterOrderDetailsService registerOrderDetails, CreateServiceOrderService createServiceOrderService, UpdateServiceOrderService updateServiceOrderService, DeleteServiceOrderService deleteServiceOrderService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _registerOrderDetails = registerOrderDetails;
             _createServiceOrderService = createServiceOrderService;
             _updateServiceOrderService = updateServiceOrderService;
+            _deleteServiceOrderService = deleteServiceOrderService;
         }
 
         [HttpGet]
@@ -96,15 +97,17 @@ namespace ApiSGTA.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Delete(int id)
         {
-            var serviceOrder = await _unitOfWork.ServiceOrderRepository.GetByIdAsync(id);
-            if (serviceOrder == null)
-                return NotFound();
-
-            _unitOfWork.ServiceOrderRepository.Remove(serviceOrder);
-            await _unitOfWork.SaveAsync();
-
-            return NoContent();
+            try
+            {
+                await _deleteServiceOrderService.ExecuteAsync(id);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return NotFound(new ApiResponse(404, ex.Message));
+            }
         }
+
 
         //Requests to use the service RegisterOrderService
         [HttpPost("{serviceOrderId}/details")]

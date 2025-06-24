@@ -36,11 +36,14 @@ namespace ApiSGTA.Extensions
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<RegisterOrderDetailsService>();
 
-            // New Services
             services.AddScoped<CreateServiceOrderService>();
             services.AddScoped<UpdateServiceOrderService>();
             services.AddScoped<GenerateInvoice>();
             services.AddScoped<RegisterClientWithVehicleService>();
+
+            // New
+            services.AddScoped<DeleteServiceOrderService>();
+
 
             //Interceptor
             services.AddSingleton<AuditInterceptor>();
