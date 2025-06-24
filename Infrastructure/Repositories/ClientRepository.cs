@@ -30,5 +30,24 @@ namespace Infrastructure.Repositories
                 .FirstOrDefaultAsync(c => c.Identification == identification);
         }
 
+        public override async Task<(int totalRegisters, IEnumerable<Client> registers)> GetAllAsync(int pageIndex, int pageSize, string search)
+        {
+            var consulta = _context.Client as IQueryable<Client>;
+
+            if (!String.IsNullOrEmpty(search))
+            {
+                consulta = consulta.Where(c => c.Name.Contains(search, StringComparison.CurrentCultureIgnoreCase));
+            }
+
+            var totalRegisters = await consulta.CountAsync();
+
+            var registers = await consulta
+                                    .Include(v => v.Vehicles)
+                                    .Skip((pageIndex - 1) * pageSize)
+                                    .Take(pageSize)
+                                    .ToListAsync();
+
+            return (totalRegisters, registers);
+        }
     }
 }

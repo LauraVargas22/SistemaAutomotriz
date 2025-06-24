@@ -128,6 +128,5 @@ namespace ApiSGTA.Controllers
                 return Conflict(ex.Message);
             }
         }
-
-            }
+    }
 }
