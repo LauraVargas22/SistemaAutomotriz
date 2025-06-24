@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using ApiSGTA.Controllers;
 using Application.DTOs;
 using AutoMapper;
+using Application.Services;
+using ApiSGTA.Helpers.Errors;
 
 namespace ApiSGTA.Controllers
 {
@@ -13,11 +15,13 @@ namespace ApiSGTA.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly GenerateInvoice _generateInovice;
 
-        public InvoiceController(IUnitOfWork unitOfWork, IMapper mapper)
+        public InvoiceController(IUnitOfWork unitOfWork, IMapper mapper, GenerateInvoice generateInovice)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _generateInovice = generateInovice;
         }
 
         [HttpGet]
@@ -87,5 +91,26 @@ namespace ApiSGTA.Controllers
 
             return NoContent();
         }
+
+        [HttpPost("generate/{serviceOrderId}")]
+[ProducesResponseType(StatusCodes.Status201Created)]
+[ProducesResponseType(StatusCodes.Status404NotFound)]
+[ProducesResponseType(StatusCodes.Status400BadRequest)]
+public async Task<IActionResult> Generate(int serviceOrderId)
+{
+    try
+    {
+        var invoiceDto = await _generateInovice.ExecuteAsync(serviceOrderId);
+        return CreatedAtAction(nameof(Get), new { id = invoiceDto.Id }, invoiceDto);
+    }
+    catch (Exception ex)
+    {
+        if (ex.Message.Contains("not found"))
+            return NotFound(new ApiResponse(404, ex.Message));
+        if (ex.Message.Contains("No order details"))
+            return BadRequest(new ApiResponse(400, ex.Message));
+        return StatusCode(500, new ApiResponse(500, ex.Message));
+    }
+}
     }
 }
