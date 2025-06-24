@@ -8,6 +8,6 @@ namespace Application.Interfaces
 {
     public interface IOrderDetailsRepository : IGenericRepository<OrderDetails>
     {
-        
+        Task<IEnumerable<OrderDetails>> GetByServiceOrderIdAsync(int serviceOrderId);
     }
 }

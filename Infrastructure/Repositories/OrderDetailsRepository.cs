@@ -23,5 +23,12 @@ namespace Infrastructure.Repositories
             return await _context.OrderDetails
                 .FirstOrDefaultAsync(od => od.Id == id) ?? throw new KeyNotFoundException($"Order Details with id {id} was not found");
         }
+
+        public async Task<IEnumerable<OrderDetails>> GetByServiceOrderIdAsync(int serviceOrderId)
+{
+            return await _context.OrderDetails
+                .Where(od => od.ServiceOrderId == serviceOrderId)
+                .ToListAsync();
+}
     }
 }
