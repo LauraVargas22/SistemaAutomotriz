@@ -23,5 +23,12 @@ namespace Infrastructure.Repositories
             return await _context.Client
                 .FirstOrDefaultAsync(cc => cc.Id == id) ?? throw new KeyNotFoundException($"Client with id {id} was not found");
         }
+
+        public async Task<Client?> GetByIdentificationAsync(string identification)
+        {
+            return await _context.Client
+                .FirstOrDefaultAsync(c => c.Identification == identification);
+        }
+
     }
 }
