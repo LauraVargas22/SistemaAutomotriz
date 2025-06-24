@@ -2,42 +2,39 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Reflection;
-using Domain.Entities;
-using Microsoft.EntityFrameworkCore;
-using Infrastructure.Data; 
-namespace Infrastructure.Data
-{
-    public class AutoTallerDbContext : DbContext
-    {
-        public AutoTallerDbContext(DbContextOptions<AutoTallerDbContext> options) : base(options) {}
+using ApiSGTA.Services;
+using Application.DTOs;
+using Microsoft.AspNetCore.Mvc;
 
-        public DbSet<Auditory> Auditory { get; set; }
-        public DbSet<Client> Client { get; set; }
-        public DbSet<DetailInspection> DetaillInspection { get; set; }
-        public DbSet<Diagnostic> Diagnostic { get; set; }
-        public DbSet<Inspection> Inspection { get; set; }
-        public DbSet<Invoice> Invoice { get; set; }
-        public DbSet<OrderDetails> OrderDetails { get; set; }
-        public DbSet<Rol> Rol { get; set; }
-        public DbSet<ServiceOrder> ServiceOrder { get; set; }
-        public DbSet<SparePart> SparePart { get; set; }
-        public DbSet<Specialization> Specialization { get; set; }
-        public DbSet<State> State { get; set; }
-        public DbSet<TypeService> TypeService { get; set; }
-        public DbSet<TypeVehicle> TypeVehicles { get; set; }
-        public DbSet<User> User { get; set; }
-        public DbSet<UserRol> UserRole { get; set; }
-        public DbSet<UserSpecialization> UserSpecialization { get; set; }
-        public DbSet<Vehicle> Vehicle { get; set; }
-        public DbSet<DetailsDiagnostic> DetailsDiagnostics { get; set; }
-        public DbSet<RefreshToken> RefreshTokens { get; set; }
-        
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            base.OnModelCreating(modelBuilder);
-            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
-        }
-        
+namespace ApiSGTA.Controllers;
+
+public class UsersController : BaseApiController
+{
+    private readonly IUserService _userService;
+
+    public UsersController(IUserService userService)
+    {
+        _userService = userService;
+    }
+
+    [HttpPost("register")]
+    public async Task<ActionResult> RegisterAsync(RegisterDto model)
+    {
+        var result = await _userService.RegisterAsync(model);
+        return Ok(result);
+    }
+
+    [HttpPost("token")]
+    public async Task<IActionResult> GetTokenAsync(LoginDto model)
+    {
+        var result = await _userService.GetTokenAsync(model);
+        return Ok(result);
+    }
+
+    [HttpPost("addrole")]
+    public async Task<IActionResult> AddRoleAsync(AddRoleDto model)
+    {
+        var result = await _userService.AddRoleAsync(model);
+        return Ok(result);
     }
 }

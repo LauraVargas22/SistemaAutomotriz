@@ -39,10 +39,10 @@ namespace ApiSGTA.Extensions
             // New Services
             services.AddScoped<CreateServiceOrderService>();
             services.AddScoped<UpdateServiceOrderService>();
+            services.AddScoped<GenerateInvoice>();
 
             //Interceptor
             services.AddSingleton<AuditInterceptor>();
-            services.AddScoped<GenerateInvoice>();
         }
 
         public static IServiceCollection AddCustomRateLimiter(this IServiceCollection services)
