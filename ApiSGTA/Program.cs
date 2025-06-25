@@ -23,6 +23,8 @@ builder.Services.AddAutoMapper(Assembly.GetEntryAssembly());
 builder.Services.AddApplicationServices();
 builder.Services.AddCustomRateLimiter();
 builder.Services.AddControllers();
+builder.Services.Configure<JWT>(builder.Configuration.GetSection("JWT"));
+
 
 builder.Services.AddEndpointsApiExplorer();
 

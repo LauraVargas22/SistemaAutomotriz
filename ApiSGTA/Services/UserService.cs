@@ -34,6 +34,8 @@ namespace ApiSGTA.Services
         {
             var usuario = new User
             {
+                Name = registerDto.Name,            
+                LastName = registerDto.LastName,      
                 UserName = registerDto.Username,
                 Email = registerDto.Email,
                 Password = registerDto.Password,
@@ -49,24 +51,12 @@ namespace ApiSGTA.Services
 
             if (UsuarioExiste == null)
             {
-            var rolPredeterminado = _unitOfWork.RolRepository
-                .Find(u => u.Description == UserAuthorization.rol_predeterminado.ToString())
-                .FirstOrDefault();
-
-            if (rolPredeterminado == null)
-            {
-                return $"El rol predeterminado '{UserAuthorization.rol_predeterminado}' no existe en la base de datos.";
-            }
-
-
                 try
                 {
-                    usuario.Rols.Add(rolPredeterminado);
                     _unitOfWork.UserRepository.Add(usuario);
-                    
                     await _unitOfWork.SaveAsync();
 
-                    return $"El usuario {registerDto.Username} hasido registrado exitosamente.";
+                    return $"El usuario {registerDto.Username} ha sido registrado exitosamente.";
                 }
                 catch (Exception ex)
                 {
@@ -79,6 +69,7 @@ namespace ApiSGTA.Services
                 return $"El usuario {registerDto.Username} ya existe.";
             }
         }
+
 
         public async Task<DataUserDto> GetTokenAsync(LoginDto model)
         {
@@ -129,41 +120,53 @@ namespace ApiSGTA.Services
 
         public async Task<string> AddRoleAsync(AddRoleDto model)
         {
-            var usuario = await _unitOfWork.UserRepository
-                .GetByUsernameAsync(model.Username);
+            var usuario = await _unitOfWork.UserRepository.GetByUsernameAsync(model.Username);
 
             if (usuario == null)
             {
-                return $"No existe algún usuario registrado en la cuenta {model.Username}";
+                return $"No existe algún usuario registrado con el username '{model.Username}'.";
             }
 
             var resultado = _passwordHasher.VerifyHashedPassword(usuario, usuario.Password, model.Password);
 
-            if (resultado == PasswordVerificationResult.Success)
+            if (resultado != PasswordVerificationResult.Success)
             {
-                var rolExiste = _unitOfWork.RolRepository
-                    .Find(r => r.Description.ToLower() == model.Role.ToLower())
-                    .FirstOrDefault();
-
-                if (rolExiste != null)
-                {
-                    var usuarioTieneRol = usuario.Rols
-                        .Any(u => u.Id == rolExiste.Id);
-
-                    if (usuarioTieneRol == false)
-                    {
-                        usuario.Rols.Add(rolExiste);
-                        _unitOfWork.UserRepository.Update(usuario);
-                        await _unitOfWork.SaveAsync();
-                    }
-
-                    return $"Rol {model.Role} agregado al usuario {model.Username} exitosamente.";
-                }
-                return $"Rol {model.Role} no existe.";
+                return $"Credenciales incorrectas para el usuario {model.Username}.";
             }
 
-            return $"Credenciales incorrectas para el usuario {model.Username}.";
+            var rolExiste = _unitOfWork.RolRepository
+                .Find(r => r.Description.ToLower() == model.Role.ToLower())
+                .FirstOrDefault();
+
+            if (rolExiste == null)
+            {
+                return $"El rol '{model.Role}' no existe.";
+            }
+
+            // Verifica si ya tiene el rol asignado
+            var yaTieneRol = usuario.UserRoles.Any(ur => ur.RolId == rolExiste.Id);
+
+            if (yaTieneRol)
+            {
+                return $"El usuario {model.Username} ya tiene el rol '{model.Role}'.";
+            }
+
+            // Asignar el rol mediante la tabla intermedia
+            var userRol = new UserRol
+            {
+                UserId = usuario.Id,
+                RolId = rolExiste.Id
+            };
+
+            usuario.UserRoles ??= new List<UserRol>();
+            usuario.UserRoles.Add(userRol);
+
+            _unitOfWork.UserRepository.Update(usuario);
+            await _unitOfWork.SaveAsync();
+
+            return $"Rol '{model.Role}' agregado al usuario '{model.Username}' exitosamente.";
         }
+
         private RefreshToken CreateRefreshToken(int userId)
         {
             var randomNumber = new byte[32];

@@ -20,9 +20,9 @@ VALUES ('Pendiente'),
 
 -- Tabla: Role
 INSERT INTO roles ("Description")
-VALUES ('Admin'),
-       ('Mecanico'),
-       ('Recepcionista');
+VALUES ('Administrator'),
+       ('Mechanic'),
+       ('Receptionist');
 
 -- Tabla: User
 INSERT INTO users (name, lastname, username, email, password)

@@ -24,10 +24,14 @@ public class AuthController : BaseApiController
         return Ok(result);
     }
 
-    [HttpPost("token")]
-    public async Task<IActionResult> GetTokenAsync(LoginDto model)
+    [HttpPost("login")]
+    public async Task<IActionResult> Login(LoginDto model)
     {
         var result = await _userService.GetTokenAsync(model);
+
+        if (!result.EstaAutenticado)
+            return Unauthorized(result.Mensaje);
+
         return Ok(result);
     }
 

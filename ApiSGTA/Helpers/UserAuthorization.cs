@@ -13,7 +13,5 @@ namespace ApiSGTA.Helpers
             Recepcionist,
             Mechanic
         }
-
-        public const Rols rol_predeterminado = Rols.Administrator;
     }
 }
