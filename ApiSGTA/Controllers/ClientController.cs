@@ -26,6 +26,7 @@ namespace ApiSGTA.Controllers
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _registerClientWithVehicleService = registerClientWithVehicleService;
         }
 
         [HttpGet]

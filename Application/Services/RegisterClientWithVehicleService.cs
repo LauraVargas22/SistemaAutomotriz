@@ -40,6 +40,11 @@ namespace Application.Services
 
             int clientId = client.Id;
             
+            if (dto.Vehicles == null || !dto.Vehicles.Any())
+            {
+                throw new Exception("Debe registrar al menos un vehículo.");
+            }
+
             foreach (var v in dto.Vehicles)
             {
                 // Validar que el tipo de vehículo existe
