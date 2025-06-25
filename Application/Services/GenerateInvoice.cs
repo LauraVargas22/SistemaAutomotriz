@@ -43,7 +43,7 @@ namespace Application.Services
             {
                 ServiceOrderId = serviceOrderId,
                 TotalPrice = total,
-                Date = DateTime.Now,
+                Date = DateOnly.FromDateTime(DateTime.UtcNow),
                 Code = Guid.NewGuid().ToString().Substring(0, 8)
             };
 

@@ -33,7 +33,7 @@ namespace Infrastructure.Configuration
 
                      builder.Property(c => c.Birth)
                             .IsRequired()
-                            .HasColumnType("timestamp")
+                            .HasColumnType("date")
                             .HasColumnName("birth");
 
                      builder.Property(c => c.Identification)
@@ -45,15 +45,15 @@ namespace Infrastructure.Configuration
 
                      builder.Property(e => e.CreatedAt)
                             .HasColumnName("createdAt")
-                            .HasColumnType("timestamp")
-                            .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                            .HasColumnType("date")
+                            .HasDefaultValueSql("CURRENT_DATE")
                             .ValueGeneratedOnAdd();
 
                      builder.Property(e => e.UpdatedAt)
                             .HasColumnName("updatedAt")
-                            .HasColumnType("timestamp")
-                            .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                            .HasColumnType("date")
+                            .HasDefaultValueSql("CURRENT_DATE")
                             .ValueGeneratedOnAddOrUpdate();
-              }
+                            }
        }
 }

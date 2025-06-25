@@ -12,7 +12,7 @@ namespace Application.DTOs.CreateServiceOrderDto
         public int Type_service_id { get; set; }
         public int Client_id { get; set; }
         public int State_id { get; set; }
-        public DateTime Entry_date { get; set; }
+        public DateOnly Entry_date { get; set; }
         public string? Client_message { get; set; } 
         public List<OrderDetailDto> order_details { get; set; } = new();
         } 

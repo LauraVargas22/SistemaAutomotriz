@@ -25,14 +25,15 @@ namespace Infrastructure.Configuration
             builder.Property(so => so.StateId)
                 .HasColumnName("state_id");
 
-            builder.Property(so => so.EntryDate)
-                .IsRequired()
-                .HasColumnType("timestamp")
-                .HasColumnName("entry_date");
+            builder.Property(c => c.EntryDate)
+                    .IsRequired()
+                    .HasColumnType("date")
+                    .HasColumnName("entry_date");
 
-            builder.Property(so => so.ExitDate)
-                .HasColumnType("timestamp")
-                .HasColumnName("exit_date");
+            builder.Property(c => c.ExitDate)
+                    .IsRequired()
+                    .HasColumnType("date")
+                    .HasColumnName("exit_date");
 
             // Otros campos
             builder.Property(so => so.IsAuthorized)
@@ -61,14 +62,14 @@ namespace Infrastructure.Configuration
 
             builder.Property(e => e.CreatedAt)
                 .HasColumnName("createdAt")
-                .HasColumnType("timestamp")
-                .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                .HasColumnType("date")
+                .HasDefaultValueSql("CURRENT_DATE")
                 .ValueGeneratedOnAdd();
 
             builder.Property(e => e.UpdatedAt)
                 .HasColumnName("updatedAt")
-                .HasColumnType("timestamp")
-                .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                .HasColumnType("date")
+                .HasDefaultValueSql("CURRENT_DATE")
                 .ValueGeneratedOnAddOrUpdate();
         }
     }

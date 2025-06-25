@@ -21,15 +21,15 @@ namespace Infrastructure.Configuration
                    .HasMaxLength(50);
 
             builder.Property(e => e.CreatedAt)
-                .HasColumnName("created_at")
-                .HasColumnType("timestamp")
-                .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                .HasColumnName("createdAt")
+                .HasColumnType("date")
+                .HasDefaultValueSql("CURRENT_DATE")
                 .ValueGeneratedOnAdd();
 
             builder.Property(e => e.UpdatedAt)
-                .HasColumnName("updated_at")
-                .HasColumnType("timestamp")
-                .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                .HasColumnName("updatedAt")
+                .HasColumnType("date")
+                .HasDefaultValueSql("CURRENT_DATE")
                 .ValueGeneratedOnAddOrUpdate();
         }
     }

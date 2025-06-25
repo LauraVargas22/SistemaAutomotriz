@@ -37,8 +37,8 @@ namespace ApiSGTA.Services
                 UserName = registerDto.Username,
                 Email = registerDto.Email,
                 Password = registerDto.Password,
-                CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow
+                CreatedAt = DateOnly.FromDateTime(DateTime.UtcNow),
+                UpdatedAt = DateOnly.FromDateTime(DateTime.UtcNow)
             };
 
             usuario.Password = _passwordHasher.HashPassword(usuario, registerDto.Password!);
@@ -101,7 +101,7 @@ namespace ApiSGTA.Services
                 dataUserDto.Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
                 dataUserDto.UserName = user.UserName;
                 dataUserDto.Email = user.Email;
-                dataUserDto.Rols = user.UserRols
+                dataUserDto.Rols = user.UserRoles
                     .Select(ur => ur.Rol.Description)
                     .ToList();
                 if (user.RefreshTokens.Any(a => a.IsActive))
@@ -172,7 +172,7 @@ namespace ApiSGTA.Services
                 generator.GetBytes(randomNumber);
                 return new RefreshToken
                 {
-                    UserMemberId = userId,
+                    UserId = userId,
                     Token = Convert.ToBase64String(randomNumber),
                     Expires = DateTime.UtcNow.AddDays(10),
                     Created = DateTime.UtcNow
@@ -216,7 +216,7 @@ namespace ApiSGTA.Services
             datosUsuarioDto.Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
             datosUsuarioDto.Email = usuario.Email;
             datosUsuarioDto.UserName = usuario.UserName;
-            datosUsuarioDto.Rols = usuario.UserRols
+            datosUsuarioDto.Rols = usuario.UserRoles
                                                 .Select(ur => ur.Rol.Description)
                                                 .ToList();
             datosUsuarioDto.RefreshToken = newRefreshToken.Token;

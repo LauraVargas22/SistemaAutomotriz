@@ -20,20 +20,21 @@ namespace Infrastructure.Configuration
                 .HasColumnType("decimal")
                 .HasColumnName("total_price");
 
-            builder.Property(i => i.Date)
-                .IsRequired()
-                .HasColumnName("date");
+            builder.Property(c => c.Date)
+                    .IsRequired()
+                    .HasColumnType("date")
+                    .HasColumnName("date");
 
             builder.Property(e => e.CreatedAt)
                 .HasColumnName("createdAt")
-                .HasColumnType("timestamp")
-                .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                .HasColumnType("date")
+                .HasDefaultValueSql("CURRENT_DATE")
                 .ValueGeneratedOnAdd();
 
             builder.Property(e => e.UpdatedAt)
                 .HasColumnName("updatedAt")
-                .HasColumnType("timestamp")
-                .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                .HasColumnType("date")
+                .HasDefaultValueSql("CURRENT_DATE")
                 .ValueGeneratedOnAddOrUpdate();
 
             builder.Property(i => i.Code)

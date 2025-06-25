@@ -11,7 +11,7 @@ namespace Domain.Entities
         public int UserId { get; set; }
         public User? User { get; set; }
         public string? Description { get; set; }
-        public DateTime Date { get; set; }
+        public DateOnly Date { get; set; }
 
         public ICollection<DetailsDiagnostic>? DetailsDiagnostics { get; set; } = new HashSet<DetailsDiagnostic>();
     }

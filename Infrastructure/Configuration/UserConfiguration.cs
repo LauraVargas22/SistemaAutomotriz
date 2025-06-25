@@ -41,20 +41,19 @@ namespace Infrastructure.Persistence.Configurations
             builder.HasIndex(u => u.Email).IsUnique();
 
             builder.Property(u => u.Password)
-                .HasMaxLength(20)
                 .IsRequired()
                 .HasColumnName("password");
                 
             builder.Property(e => e.CreatedAt)
                 .HasColumnName("createdAt")
-                .HasColumnType("timestamp")
-                .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                .HasColumnType("date")
+                .HasDefaultValueSql("CURRENT_DATE")
                 .ValueGeneratedOnAdd();
 
             builder.Property(e => e.UpdatedAt)
                 .HasColumnName("updatedAt")
-                .HasColumnType("timestamp")
-                .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                .HasColumnType("date")
+                .HasDefaultValueSql("CURRENT_DATE")
                 .ValueGeneratedOnAddOrUpdate();
         }
     }

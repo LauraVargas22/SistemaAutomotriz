@@ -11,7 +11,7 @@ namespace Application.DTOs
         public int VehiclesId { get; set; }
         public int TypeServiceId { get; set; }
         public int StateId { get; set; }
-        public DateTime EntryDate { get; set; }
+        public DateOnly EntryDate { get; set; }
         public string? ClientMessage { get; set; }
     }
 

@@ -10,7 +10,7 @@ namespace Domain.Entities
         public int Id { get; set; }
         public int ServiceOrderId { get; set; }
         public decimal TotalPrice { get; set; }
-        public DateTime Date { get; set; }
+        public DateOnly Date { get; set; }
         public string? Code { get; set; }
 
         public ServiceOrder? ServiceOrders { get; set; }

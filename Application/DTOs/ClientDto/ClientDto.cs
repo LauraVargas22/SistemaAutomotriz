@@ -12,7 +12,7 @@ namespace Application.DTOs
         public string? LastName { get; set; }
         public string? Email { get; set; }
         public string? Phone { get; set; }
-        public DateTime Birth { get; set; }
+        public DateOnly Birth { get; set; }
         public string? Identification { get; set; }
     }
 }
