@@ -1,18 +1,16 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Reflection;
-using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 using Infrastructure.Interceptors;
+using Domain.Entities;
 
 namespace Infrastructure.Data
 {
     public class AutoTallerDbContext : DbContext
     {
         private readonly AuditInterceptor _auditInterceptor;
-        public AutoTallerDbContext(DbContextOptions<AutoTallerDbContext> options, AuditInterceptor auditInterceptor) : base(options)
+
+        public AutoTallerDbContext(DbContextOptions<AutoTallerDbContext> options, AuditInterceptor auditInterceptor)
+            : base(options)
         {
             _auditInterceptor = auditInterceptor;
         }
@@ -32,7 +30,7 @@ namespace Infrastructure.Data
         public DbSet<TypeService> TypeService { get; set; }
         public DbSet<TypeVehicle> TypeVehicles { get; set; }
         public DbSet<User> User { get; set; }
-        public DbSet<UserRol> UserRole { get; set; }
+        public DbSet<UserRol> UserRoles { get; set; }
         public DbSet<UserSpecialization> UserSpecialization { get; set; }
         public DbSet<Vehicle> Vehicle { get; set; }
         public DbSet<DetailsDiagnostic> DetailsDiagnostics { get; set; }
@@ -48,6 +46,5 @@ namespace Infrastructure.Data
         {
             optionsBuilder.AddInterceptors(_auditInterceptor);
         }
-        
     }
 }

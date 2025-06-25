@@ -10,16 +10,12 @@ namespace Infrastructure.Configurations
         {
             builder.ToTable("user_roles");
 
-            // Clave primaria compuesta
             builder.HasKey(ur => new { ur.UserId, ur.RolId });
 
-            // Relaciones
-            // Muchos UserRol para un User
             builder.HasOne(ur => ur.User)
-                   .WithMany(u => u.UserRols)
+                   .WithMany(u => u.UserRoles)
                    .HasForeignKey(ur => ur.UserId);
 
-            // Muchos UserRol para un Rol
             builder.HasOne(ur => ur.Rol)
                    .WithMany(r => r.UserRoles)
                    .HasForeignKey(ur => ur.RolId);

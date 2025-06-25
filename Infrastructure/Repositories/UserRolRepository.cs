@@ -11,7 +11,7 @@ namespace Infrastructure.Repositories
 {
     public class UserRolRepository : IUserRolRepository
     {
-        protected readonly AutoTallerDbContext _context;
+        private readonly AutoTallerDbContext _context;
 
         public UserRolRepository(AutoTallerDbContext context)
         {
@@ -20,25 +20,24 @@ namespace Infrastructure.Repositories
 
         public async Task<IEnumerable<UserRol>> GetAllAsync()
         {
-            return await _context.Set<UserRol>().ToListAsync();
+            return await _context.UserRoles.ToListAsync();
         }
 
         public async Task<UserRol?> GetByIdsAsync(int userId, int rolId)
         {
-            return await _context.UserRole
+            return await _context.UserRoles
                 .FirstOrDefaultAsync(ur => ur.UserId == userId && ur.RolId == rolId)
                 ?? throw new KeyNotFoundException($"UserRol with UserId {userId} and RolId {rolId} was not found");
         }
 
         public void Remove(UserRol entity)
         {
-             _context.Set<UserRol>().Remove(entity);
+            _context.UserRoles.Remove(entity);
         }
 
         public void Update(UserRol entity)
         {
-            _context.Set<UserRol>()
-                .Update(entity);
+            _context.UserRoles.Update(entity);
         }
     }
 }

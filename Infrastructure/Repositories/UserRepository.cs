@@ -21,18 +21,20 @@ namespace Infrastructure.Repositories
         public async Task<User> GetByUsernameAsync(string username)
         {
             return await _context.User
-                            .Include(u=>u.UserRols)
-                            .ThenInclude(ur=>ur.Rol)
+                            .Include(u => u.UserRoles)
+                                .ThenInclude(ur => ur.Rol)
                             .Include(u => u.RefreshTokens)
-                            .FirstOrDefaultAsync(u=>u.UserName.ToLower()==username.ToLower());
+                            .FirstOrDefaultAsync(u => u.UserName.ToLower() == username.ToLower());
         }
+
         public async Task<User> GetByRefreshTokenAsync(string refreshToken)
         {
             return await _context.User
-                        .Include(u=>u.UserRols)
-                            .ThenInclude(ur=>ur.Rol)
-                        .Include(u => u.RefreshTokens)
-                        .FirstOrDefaultAsync(u=>u.RefreshTokens.Any(t=>t.Token==refreshToken));
-        }
+                            .Include(u => u.UserRoles)
+                                .ThenInclude(ur => ur.Rol)
+                            .Include(u => u.RefreshTokens)
+                            .FirstOrDefaultAsync(u => u.RefreshTokens.Any(t => t.Token == refreshToken));
+        }
+
     }
 }
