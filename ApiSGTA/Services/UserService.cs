@@ -49,9 +49,15 @@ namespace ApiSGTA.Services
 
             if (UsuarioExiste == null)
             {
-                var rolPredeterminado = _unitOfWork.RolRepository
-                    .Find(u => u.Description == UserAuthorization.rol_predeterminado.ToString())
-                    .First();
+            var rolPredeterminado = _unitOfWork.RolRepository
+                .Find(u => u.Description == UserAuthorization.rol_predeterminado.ToString())
+                .FirstOrDefault();
+
+            if (rolPredeterminado == null)
+            {
+                return $"El rol predeterminado '{UserAuthorization.rol_predeterminado}' no existe en la base de datos.";
+            }
+
 
                 try
                 {

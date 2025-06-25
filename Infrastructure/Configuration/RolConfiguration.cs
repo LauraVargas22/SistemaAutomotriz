@@ -21,13 +21,13 @@ namespace Infrastructure.Configuration
                    .HasMaxLength(50);
 
             builder.Property(e => e.CreatedAt)
-                .HasColumnName("createdAt")
+                .HasColumnName("created_at")
                 .HasColumnType("timestamp")
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .ValueGeneratedOnAdd();
 
             builder.Property(e => e.UpdatedAt)
-                .HasColumnName("updatedAt")
+                .HasColumnName("updated_at")
                 .HasColumnType("timestamp")
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .ValueGeneratedOnAddOrUpdate();

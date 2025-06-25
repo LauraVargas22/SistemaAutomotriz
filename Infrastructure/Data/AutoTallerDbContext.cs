@@ -42,6 +42,20 @@ namespace Infrastructure.Data
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+            modelBuilder.Entity<UserRol>().ToTable("user_roles");
+            modelBuilder.Entity<UserRol>()
+                .HasKey(ur => new { ur.UserId, ur.RolId });
+
+            modelBuilder.Entity<UserRol>()
+                .HasOne(ur => ur.User)
+                .WithMany(u => u.UserRoles)
+                .HasForeignKey(ur => ur.UserId);
+
+            modelBuilder.Entity<UserRol>()
+                .HasOne(ur => ur.Rol)
+                .WithMany(r => r.UserRoles)
+                .HasForeignKey(ur => ur.RolId);
+
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
