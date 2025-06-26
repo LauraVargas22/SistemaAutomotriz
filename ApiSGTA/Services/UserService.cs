@@ -20,22 +20,33 @@ namespace ApiSGTA.Services
         private readonly JWT _jwt;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IPasswordHasher<User> _passwordHasher;
+        private readonly IHttpContextAccessor _httpContextAccesor;
 
         public UserService(IUnitOfWork unitOfWork, IOptions<JWT> jwt,
-            IPasswordHasher<User> passwordHasher)
+            IPasswordHasher<User> passwordHasher, IHttpContextAccessor httpContextAccessor)
         {
             _unitOfWork = unitOfWork;
             _jwt = jwt.Value;
             _passwordHasher = passwordHasher;
+            _httpContextAccesor = httpContextAccessor;
+        }
 
+        public string GetCurrentUser()
+        {
+            var user = _httpContextAccesor.HttpContext?.User;
+
+            if (user == null || !user.Identity.IsAuthenticated)
+                return "Anonymous";
+
+            return user.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "UnKnown";
         }
 
         public async Task<string> RegisterAsync(RegisterDto registerDto)
         {
             var usuario = new User
             {
-                Name = registerDto.Name,            
-                LastName = registerDto.LastName,      
+                Name = registerDto.Name,
+                LastName = registerDto.LastName,
                 UserName = registerDto.Username,
                 Email = registerDto.Email,
                 Password = registerDto.Password,

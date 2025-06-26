@@ -46,7 +46,8 @@ namespace ApiSGTA.Extensions
 
 
             //Interceptor
-            services.AddSingleton<AuditInterceptor>();
+            services.AddScoped<AuditInterceptor>();
+            services.AddHttpContextAccessor();
         }
 
         public static IServiceCollection AddCustomRateLimiter(this IServiceCollection services)
