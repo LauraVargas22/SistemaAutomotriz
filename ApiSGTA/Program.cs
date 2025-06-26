@@ -9,7 +9,6 @@ using ApiSGTA.Extensions;
 using ApiSGTA.Helpers;
 using Microsoft.AspNetCore.RateLimiting;
 using System.Threading.RateLimiting;
-// New
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
