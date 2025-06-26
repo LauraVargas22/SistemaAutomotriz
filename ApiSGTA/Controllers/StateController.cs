@@ -4,11 +4,15 @@ using Domain.Entities;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using ApiSGTA.Controllers;
+using Microsoft.AspNetCore.Authorization;
 using Application.DTOs;
 using AutoMapper;
 
 namespace ApiSGTA.Controllers
 {
+    [ApiController]
+    [Route("api/[controller]")]
+    [Authorize(Roles = "Administrator")]
     public class StateController : BaseApiController
     {
         private readonly IUnitOfWork _unitOfWork;

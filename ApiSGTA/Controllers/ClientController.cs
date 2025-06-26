@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using ApiSGTA.Controllers;
 using Application.DTOs;
+using Microsoft.AspNetCore.Authorization;
 using AutoMapper;
 using Application.Services;
 using Application.DTOs.RegisterClientWithVehicleDto;
@@ -12,9 +13,9 @@ using ApiSGTA.Helpers;
 
 namespace ApiSGTA.Controllers
 {
-    // [Authorize(Policy = "AdminOnly")]
-    // [ApiController]
-    // [Route("[controller]")]
+    [ApiController]
+    [Route("api/[controller]")]
+    [Authorize(Roles = "Administrator, Recepcionist")]
     public class ClientController : BaseApiController
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -143,7 +144,7 @@ namespace ApiSGTA.Controllers
             var clientDtos = _mapper.Map<List<ClientDto>>(registers);
             
             // Agregar X-Total-Count en los encabezados HTTP
-            Response.Headers.Add("X-Total-Count", totalRegisters.ToString());
+            Response.Headers.Append("X-Total-Count", totalRegisters.ToString());
             
             return Ok(clientDtos);
         }
