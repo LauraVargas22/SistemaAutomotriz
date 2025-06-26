@@ -4,32 +4,47 @@ using Domain.Entities;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.AspNetCore.Http;
+using System.Security.Claims;
 
 namespace Infrastructure.Interceptors
 {
     public class AuditInterceptor : SaveChangesInterceptor
     {
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
+        public AuditInterceptor(IHttpContextAccessor httpContextAccessor)
+        {
+            _httpContextAccessor = httpContextAccessor;
+        }
+        
         public override InterceptionResult<int> SavingChanges(DbContextEventData eventData, InterceptionResult<int> result)
         {
             var context = eventData.Context;
             if (context == null)
                 return result;
 
-            LogChanges(context);
+            var currentUser = GetCurrentUser();
+            LogChanges(context, currentUser);
             return result;
         }
 
-        public override async ValueTask<InterceptionResult<int>> SavingChangesAsync(DbContextEventData eventData, InterceptionResult<int> result, CancellationToken cancellationToken = default)
+        public override async ValueTask<InterceptionResult<int>> SavingChangesAsync(
+            DbContextEventData eventData, 
+            InterceptionResult<int> result, 
+            CancellationToken cancellationToken = default)
         {
             var context = eventData.Context;
             if (context == null)
                 return result;
 
-            LogChanges(context);
+            var currentUser = GetCurrentUser();
+            LogChanges(context, currentUser);
+
             return await base.SavingChangesAsync(eventData, result, cancellationToken);
         }
 
-        private void LogChanges(DbContext context)
+        private void LogChanges(DbContext context, string currentUser)
         {
             var auditLogs = new List<Auditory>();
 
@@ -41,7 +56,7 @@ namespace Infrastructure.Interceptors
                     {
                         EntityName = entry.Entity.GetType().Name,
                         ChangeType = entry.State.ToString(),
-                        ChangedBy = "SystemUser"
+                        ChangedBy = currentUser
                     });
                 }
             }
@@ -50,6 +65,19 @@ namespace Infrastructure.Interceptors
             {
                 context.Set<Auditory>().AddRange(auditLogs);
             }
+        }
+
+        private string GetCurrentUser()
+        {
+            var httpContext = _httpContextAccessor.HttpContext;
+            if (httpContext?.User?.Identity?.IsAuthenticated == true)
+            {
+                // Puedes cambiar "uid" por el claim que uses en tu JWT
+                return httpContext.User.FindFirst("uid")?.Value
+                    ?? httpContext.User.Identity.Name
+                    ?? "SystemUser";
+            }
+            return "SystemUser";
         }
     }
 }

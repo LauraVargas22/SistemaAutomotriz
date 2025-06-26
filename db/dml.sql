@@ -101,10 +101,6 @@ VALUES (1, 'Rotula desgastada', '2025-05-10'), (2, 'Direccion desalineada', '202
 INSERT INTO details_diagnostics ("ServiceOrderId", "DiagnosticId")
 VALUES (1, 1), (2, 2), (3, 3), (4, 4), (5, 5);
 
--- Tabla: Auditory
-INSERT INTO auditories (user_id, entity, date, type_action)
-VALUES (1, 'Client', NOW(), 'INSERT'), (2, 'Vehicle', NOW(), 'UPDATE'), (3, 'ServiceOrder', NOW(), 'DELETE'), (4, 'Invoice', NOW(), 'INSERT'), (5, 'OrderDetails', NOW(), 'UPDATE');
-
 INSERT INTO inspection (name) VALUES ('Frenos'), ('Motor'), ('Luces'), ('Retrovisor'), ('Volante');
 
 INSERT INTO detaill_inspection ("serviceOrder_id", inspection_id, quantity) VALUES (1, 1, 2), (2, 2, 4);
