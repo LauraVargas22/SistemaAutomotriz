@@ -1,6 +1,7 @@
 using System;
 using Application.Interfaces;
 using Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using ApiSGTA.Controllers;
@@ -9,6 +10,9 @@ using AutoMapper;
 
 namespace ApiSGTA.Controllers
 {
+    [ApiController]
+    [Route("api/[controller]")]
+    [Authorize(Roles = "Administrator")]
     public class TypeServiceController : BaseApiController
     {
         private readonly IUnitOfWork _unitOfWork;

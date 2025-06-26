@@ -3,12 +3,17 @@ using Application.Interfaces;
 using Domain.Entities;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using ApiSGTA.Controllers;
 using Application.DTOs;
 using AutoMapper;
 
 namespace ApiSGTA.Controllers
 {
+
+    [ApiController]
+    [Route("api/[controller]")]
+    [Authorize(Roles = "Administrator, Mechanic")]
     public class OrderDetailsController : BaseApiController
     {
         private readonly IUnitOfWork _unitOfWork;

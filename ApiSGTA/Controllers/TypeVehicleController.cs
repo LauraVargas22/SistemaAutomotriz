@@ -8,7 +8,9 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace ApiSGTA.Controllers
 {
-    [Authorize(Roles = "Mechanic")]
+    [ApiController]
+    [Route("api/[controller]")]
+    [Authorize(Roles = "Administrator")]
     public class TypeVehicleController : BaseApiController
     {
         private readonly IUnitOfWork _unitOfWork;

@@ -3,6 +3,7 @@ using Application.Interfaces;
 using Domain.Entities;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using ApiSGTA.Controllers;
 using Application.DTOs;
 using AutoMapper;
@@ -10,6 +11,9 @@ using ApiSGTA.Helpers.Errors;
 
 namespace ApiSGTA.Controllers
 {
+    [ApiController]
+    [Route("api/[controller]")]
+    [Authorize(Roles = "Administrator")]
     public class SparePartController : BaseApiController
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -40,10 +44,10 @@ namespace ApiSGTA.Controllers
         {
             var (totalRegisters, registers) = await _unitOfWork.SparePartRepository.GetAllAsync(pageNumber, pageSize, search);
             var sparePartDtos = _mapper.Map<List<SparePartDto>>(registers);
-            
+
             // Agregar X-Total-Count en los encabezados HTTP
-            Response.Headers.Add("X-Total-Count", totalRegisters.ToString());
-            
+            Response.Headers.Append("X-Total-Count", totalRegisters.ToString());
+
             return Ok(sparePartDtos);
         }
 

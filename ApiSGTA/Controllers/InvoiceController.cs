@@ -3,6 +3,7 @@ using Application.Interfaces;
 using Domain.Entities;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using ApiSGTA.Controllers;
 using Application.DTOs;
 using AutoMapper;
@@ -11,6 +12,9 @@ using ApiSGTA.Helpers.Errors;
 
 namespace ApiSGTA.Controllers
 {
+    [ApiController]
+    [Route("api/[controller]")]
+    [Authorize(Roles = "Administrator, Mechanic")]
     public class InvoiceController : BaseApiController
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -43,10 +47,10 @@ namespace ApiSGTA.Controllers
         {
             var (totalRegisters, registers) = await _unitOfWork.InvoiceRepository.GetAllAsync(pageNumber, pageSize, search);
             var invoiceDtos = _mapper.Map<List<InvoiceDto>>(registers);
-            
+
             // Agregar X-Total-Count en los encabezados HTTP
-            Response.Headers.Add("X-Total-Count", totalRegisters.ToString());
-            
+            Response.Headers.Append("X-Total-Count", totalRegisters.ToString());
+
             return Ok(invoiceDtos);
         }
 
@@ -110,24 +114,24 @@ namespace ApiSGTA.Controllers
         }
 
         [HttpPost("generate/{serviceOrderId}")]
-[ProducesResponseType(StatusCodes.Status201Created)]
-[ProducesResponseType(StatusCodes.Status404NotFound)]
-[ProducesResponseType(StatusCodes.Status400BadRequest)]
-public async Task<IActionResult> Generate(int serviceOrderId)
-{
-    try
-    {
-        var invoiceDto = await _generateInovice.ExecuteAsync(serviceOrderId);
-        return CreatedAtAction(nameof(Get), new { id = invoiceDto.Id }, invoiceDto);
-    }
-    catch (Exception ex)
-    {
-        if (ex.Message.Contains("not found"))
-            return NotFound(new ApiResponse(404, ex.Message));
-        if (ex.Message.Contains("No order details"))
-            return BadRequest(new ApiResponse(400, ex.Message));
-        return StatusCode(500, new ApiResponse(500, ex.Message));
-    }
-}
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> Generate(int serviceOrderId)
+        {
+            try
+            {
+                var invoiceDto = await _generateInovice.ExecuteAsync(serviceOrderId);
+                return CreatedAtAction(nameof(Get), new { id = invoiceDto.Id }, invoiceDto);
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Contains("not found"))
+                    return NotFound(new ApiResponse(404, ex.Message));
+                if (ex.Message.Contains("No order details"))
+                    return BadRequest(new ApiResponse(400, ex.Message));
+                return StatusCode(500, new ApiResponse(500, ex.Message));
+            }
+        }
     }
 }

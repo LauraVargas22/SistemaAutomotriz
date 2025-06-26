@@ -3,6 +3,7 @@ using Application.Interfaces;
 using Domain.Entities;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using ApiSGTA.Controllers;
 using Application.DTOs;
 using AutoMapper;
@@ -11,7 +12,10 @@ using ApiSGTA.Helpers.Errors;
 using Application.DTOs.CreateServiceOrderDto;
 
 namespace ApiSGTA.Controllers
-{
+{ 
+    [ApiController]
+    [Route("api/[controller]")]
+    [Authorize(Roles = "Administrator, Recepcionist, Mechanic")]
     public class ServiceOrderController : BaseApiController
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -52,7 +56,7 @@ namespace ApiSGTA.Controllers
             var serviceOrderDtos = _mapper.Map<List<ServiceOrderDto>>(registers);
             
             // Agregar X-Total-Count en los encabezados HTTP
-            Response.Headers.Add("X-Total-Count", totalRegisters.ToString());
+            Response.Headers.Append("X-Total-Count", totalRegisters.ToString());
             
             return Ok(serviceOrderDtos);
         }
