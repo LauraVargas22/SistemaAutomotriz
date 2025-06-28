@@ -74,21 +74,36 @@ namespace ApiSGTA.Controllers
             return _mapper.Map<ServiceOrderDto>(serviceOrder);
         }
 
-        // Implementation of CreateServiceOrderService
+        // // Implementation of CreateServiceOrderService
+        // [HttpPost]
+        // [ProducesResponseType(StatusCodes.Status201Created)]
+        // [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        // public async Task<IActionResult> Post([FromBody] CreateServiceOrderDto dto)
+        // {
+        //     try
+        //     {
+        //         var newOrderId = await _createServiceOrderService.ExecuteAsync(dto);
+        //         return CreatedAtAction(nameof(Get), new { id = newOrderId }, new { id = newOrderId });
+        //     }
+        //     catch (Exception ex)
+        //     {
+        //         return BadRequest(new ApiResponse(400, ex.Message));
+        //     }
+        // }
+
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Post([FromBody] CreateServiceOrderDto dto)
+        public async Task<ActionResult<ServiceOrder>> Post(ServiceOrderDto serviceOrderDto)
         {
-            try
+            var serviceOrder = _mapper.Map<ServiceOrder>(serviceOrderDto);
+            _unitOfWork.ServiceOrderRepository.Add(serviceOrder);
+            await _unitOfWork.SaveAsync();
+            if (serviceOrderDto == null)
             {
-                var newOrderId = await _createServiceOrderService.ExecuteAsync(dto);
-                return CreatedAtAction(nameof(Get), new { id = newOrderId }, new { id = newOrderId });
+                return BadRequest();
             }
-            catch (Exception ex)
-            {
-                return BadRequest(new ApiResponse(400, ex.Message));
-            }
+            return CreatedAtAction(nameof(Post), new { id = serviceOrderDto.Id }, serviceOrder);
         }
 
         // Implementation of UpdateServiceOrderService

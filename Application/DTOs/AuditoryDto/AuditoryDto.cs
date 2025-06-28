@@ -12,6 +12,6 @@ namespace Application.DTOs
         public string? EntityName { get; set; }
         public string? ChangeType { get; set; }
         public string? ChangedBy { get; set; }
-        public DateOnly Timestamp { get; set; }
+        public DateOnly Date { get; set; }
     }
 }
