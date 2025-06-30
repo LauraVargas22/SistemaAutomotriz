@@ -49,12 +49,14 @@ namespace ApiSGTA.Services
                 LastName = registerDto.LastName,
                 UserName = registerDto.Username,
                 Email = registerDto.Email,
-                Password = registerDto.Password,
                 CreatedAt = DateOnly.FromDateTime(DateTime.UtcNow),
                 UpdatedAt = DateOnly.FromDateTime(DateTime.UtcNow)
             };
 
-            usuario.Password = _passwordHasher.HashPassword(usuario, registerDto.Password!);
+            // 🔐 Hashear contraseña y mostrar en consola
+            var hashedPassword = _passwordHasher.HashPassword(usuario, registerDto.Password!);
+            Console.WriteLine($"🔐 Hashed: {hashedPassword}");
+            usuario.Password = hashedPassword;
 
             var UsuarioExiste = _unitOfWork.UserRepository
                 .Find(u => u.UserName.ToLower() == registerDto.Username.ToLower())
@@ -82,6 +84,7 @@ namespace ApiSGTA.Services
         }
 
 
+
         public async Task<DataUserDto> GetTokenAsync(LoginDto model)
         {
             DataUserDto dataUserDto = new DataUserDto();
@@ -98,6 +101,12 @@ namespace ApiSGTA.Services
             var resultado = _passwordHasher.VerifyHashedPassword(user, user.Password, model.Password);
             if (resultado == PasswordVerificationResult.Success)
             {
+                dataUserDto.Id          = user.Id;
+                dataUserDto.Name        = user.Name;
+                dataUserDto.LastName    = user.LastName;
+                dataUserDto.IsActive    = user.IsActive;
+                dataUserDto.CreatedAt   = user.CreatedAt.ToDateTime(TimeOnly.MinValue);
+                dataUserDto.UpdatedAt   = user.UpdatedAt.ToDateTime(TimeOnly.MinValue);
                 dataUserDto.EstaAutenticado = true;
                 JwtSecurityToken jwtSecurityToken = CreateJwtToken(user);
                 dataUserDto.Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
@@ -139,8 +148,8 @@ namespace ApiSGTA.Services
             }
 
             var resultado = _passwordHasher.VerifyHashedPassword(usuario, usuario.Password, model.Password);
-
             if (resultado != PasswordVerificationResult.Success)
+
             {
                 return $"Credenciales incorrectas para el usuario {model.Username}.";
             }
@@ -240,11 +249,11 @@ namespace ApiSGTA.Services
         
         private JwtSecurityToken CreateJwtToken(User usuario)
         {
-            var roles = usuario.Rols;
+            // var roles = usuario.Rols;
             var roleClaims = new List<Claim>();
-            foreach (var role in roles)
+            foreach (var userRole in usuario.UserRoles)
             {
-                roleClaims.Add(new Claim(ClaimTypes.Role, role.Description));
+                roleClaims.Add(new Claim(ClaimTypes.Role, userRole.Rol.Description));
             }
             var claims = new[]
             {

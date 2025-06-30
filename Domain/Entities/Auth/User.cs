@@ -13,6 +13,8 @@ namespace Domain.Entities
         public string? UserName { get; set; }
         public string? Email { get; set; }
         public string? Password { get; set; }
+        public bool IsActive { get; set; } = true;
+
         public ICollection<ServiceOrder>? ServiceOrders { get; set; } = new HashSet<ServiceOrder>();
         public ICollection<Auditory>? Auditories { get; set; } = new HashSet<Auditory>();
         public ICollection<Rol>? Rols { get; set; } = new HashSet<Rol>();
