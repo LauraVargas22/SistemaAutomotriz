@@ -35,6 +35,8 @@ namespace Infrastructure.Data
         public DbSet<Vehicle> Vehicle { get; set; }
         public DbSet<DetailsDiagnostic> DetailsDiagnostics { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
+        // New
+        public DbSet<TelephoneNumbers> TelephoneNumbers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

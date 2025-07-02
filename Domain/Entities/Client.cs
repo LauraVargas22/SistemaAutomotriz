@@ -17,5 +17,6 @@ namespace Domain.Entities
 
         public ICollection<Vehicle>? Vehicles { get; set; } = new HashSet<Vehicle>();
         public ICollection<ServiceOrder>? ServiceOrders { get; set; } = new HashSet<ServiceOrder>();
-    }
-}
+        public ICollection<TelephoneNumbers>? TelephoneNumbers { get; set; } = new HashSet<TelephoneNumbers>();
+    } 
+} 
