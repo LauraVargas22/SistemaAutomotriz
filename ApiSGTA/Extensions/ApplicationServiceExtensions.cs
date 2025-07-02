@@ -16,6 +16,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using Infrastructure.Configuration;
+using Domain.Ports;
+using Infrastructure.Adapters;
 
 namespace ApiSGTA.Extensions
 {
@@ -40,14 +43,18 @@ namespace ApiSGTA.Extensions
             services.AddScoped<UpdateServiceOrderService>();
             services.AddScoped<GenerateInvoice>();
             services.AddScoped<RegisterClientWithVehicleService>();
-
-            // New
             services.AddScoped<DeleteServiceOrderService>();
-
-
             //Interceptor
             services.AddScoped<AuditInterceptor>();
             services.AddHttpContextAccessor();
+
+            // Configuración de Email
+            var emailConfig = services.BuildServiceProvider().GetRequiredService<IConfiguration>().GetSection("EmailSettings").Get<EmailConfiguration>();
+            services.AddSingleton(emailConfig);
+
+            // Registro de servicios
+            services.AddScoped<IEmailService, EmailService>();
+            services.AddScoped<CreateEmailServiceOrderService>();
         }
 
         public static IServiceCollection AddCustomRateLimiter(this IServiceCollection services)

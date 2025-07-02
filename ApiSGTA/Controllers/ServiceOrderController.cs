@@ -24,8 +24,9 @@ namespace ApiSGTA.Controllers
         private readonly CreateServiceOrderService _createServiceOrderService;
         private readonly UpdateServiceOrderService _updateServiceOrderService;
         private readonly DeleteServiceOrderService _deleteServiceOrderService;
+        private readonly CreateEmailServiceOrderService _createService;
 
-        public ServiceOrderController(IUnitOfWork unitOfWork, IMapper mapper, RegisterOrderDetailsService registerOrderDetails, CreateServiceOrderService createServiceOrderService, UpdateServiceOrderService updateServiceOrderService, DeleteServiceOrderService deleteServiceOrderService)
+        public ServiceOrderController(IUnitOfWork unitOfWork, IMapper mapper, RegisterOrderDetailsService registerOrderDetails, CreateServiceOrderService createServiceOrderService, UpdateServiceOrderService updateServiceOrderService, DeleteServiceOrderService deleteServiceOrderService, CreateEmailServiceOrderService createService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -33,6 +34,7 @@ namespace ApiSGTA.Controllers
             _createServiceOrderService = createServiceOrderService;
             _updateServiceOrderService = updateServiceOrderService;
             _deleteServiceOrderService = deleteServiceOrderService;
+            _createService = createService;
         }
 
         [HttpGet]
@@ -91,19 +93,33 @@ namespace ApiSGTA.Controllers
         //     }
         // }
 
+        // [HttpPost]
+        // [ProducesResponseType(StatusCodes.Status200OK)]
+        // [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        // public async Task<ActionResult<ServiceOrder>> Post(ServiceOrderDto serviceOrderDto)
+        // {
+        //     var serviceOrder = _mapper.Map<ServiceOrder>(serviceOrderDto);
+        //     _unitOfWork.ServiceOrderRepository.Add(serviceOrder);
+        //     await _unitOfWork.SaveAsync();
+        //     if (serviceOrderDto == null)
+        //     {
+        //         return BadRequest();
+        //     }
+        //     return CreatedAtAction(nameof(Post), new { id = serviceOrderDto.Id }, serviceOrder);
+        // }
+
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<ServiceOrder>> Post(ServiceOrderDto serviceOrderDto)
+        public async Task<IActionResult> Create([FromBody] ServiceOrderDto request)
         {
-            var serviceOrder = _mapper.Map<ServiceOrder>(serviceOrderDto);
-            _unitOfWork.ServiceOrderRepository.Add(serviceOrder);
-            await _unitOfWork.SaveAsync();
-            if (serviceOrderDto == null)
+            try
             {
-                return BadRequest();
+                var result = await _createService.CreateEmailServiceOrderAsync(request);
+                return Ok(result);
             }
-            return CreatedAtAction(nameof(Post), new { id = serviceOrderDto.Id }, serviceOrder);
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
         }
 
         // Implementation of UpdateServiceOrderService
