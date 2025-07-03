@@ -26,11 +26,6 @@ namespace Infrastructure.Configuration
                             .HasMaxLength(50)
                             .HasColumnName("email");
 
-                     builder.Property(c => c.Phone)
-                            .IsRequired()
-                            .HasMaxLength(20)
-                            .HasColumnName("phone");
-
                      builder.Property(c => c.Birth)
                             .IsRequired()
                             .HasColumnType("date")

@@ -57,15 +57,35 @@ namespace ApiSGTA.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<Client>> Post(ClientDto clientDto)
         {
-            var clients = _mapper.Map<Client>(clientDto);
-            _unitOfWork.ClientRepository.Add(clients);
-            await _unitOfWork.SaveAsync();
             if (clientDto == null)
             {
                 return BadRequest();
             }
-            return CreatedAtAction(nameof(Post), new { id = clientDto.Id }, clients);
+
+            var client = _mapper.Map<Client>(clientDto);
+
+            _unitOfWork.ClientRepository.Add(client);
+            await _unitOfWork.SaveAsync(); // Guarda para que se genere el Id
+
+            // Guardar los teléfonos si existen
+            if (clientDto.TelephoneNumbers != null && clientDto.TelephoneNumbers.Any())
+            {
+                foreach (var telDto in clientDto.TelephoneNumbers)
+                {
+                    var tel = new TelephoneNumbers
+                    {
+                        ClientId = client.Id,
+                        Number = telDto.Number
+                    };
+                    _unitOfWork.TelephoneNumbersRepository.Add(tel);
+                }
+
+                await _unitOfWork.SaveAsync();
+            }
+
+            return CreatedAtAction(nameof(Post), new { id = client.Id }, client);
         }
+
 
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
