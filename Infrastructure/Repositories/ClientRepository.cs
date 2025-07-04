@@ -21,7 +21,10 @@ namespace Infrastructure.Repositories
         public override async Task<Client> GetByIdAsync(int id)
         {
             return await _context.Client
-                .FirstOrDefaultAsync(cc => cc.Id == id) ?? throw new KeyNotFoundException($"Client with id {id} was not found");
+                .Include(c => c.TelephoneNumbers)
+                .Include(c => c.Vehicles)
+                .FirstOrDefaultAsync(cc => cc.Id == id) ?? 
+                throw new KeyNotFoundException($"Client with id {id} was not found");
         }
 
         public async Task<Client?> GetByIdentificationAsync(string identification)
@@ -29,6 +32,14 @@ namespace Infrastructure.Repositories
             return await _context.Client
                 .FirstOrDefaultAsync(c => c.Identification == identification);
         }
+
+        public async Task<IEnumerable<Client>> GetAllAsync()
+        {
+            return await _context.Client 
+                .Include(c => c.TelephoneNumbers) // ⬅️ Esto es clave
+                .ToListAsync();
+        }
+
 
         public override async Task<(int totalRegisters, IEnumerable<Client> registers)> GetAllAsync(int pageIndex, int pageSize, string search)
         {
@@ -42,10 +53,12 @@ namespace Infrastructure.Repositories
             var totalRegisters = await consulta.CountAsync();
 
             var registers = await consulta
-                                    .Include(v => v.Vehicles)
-                                    .Skip((pageIndex - 1) * pageSize)
-                                    .Take(pageSize)
-                                    .ToListAsync();
+                .Include(c => c.Vehicles)
+                .Include(c => c.TelephoneNumbers)
+                .Skip((pageIndex - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
 
             return (totalRegisters, registers);
         }

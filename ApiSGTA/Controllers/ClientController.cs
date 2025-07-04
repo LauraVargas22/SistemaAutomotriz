@@ -31,12 +31,10 @@ namespace ApiSGTA.Controllers
         }
 
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<IEnumerable<ClientDto>>> Get()
         {
             var clients = await _unitOfWork.ClientRepository.GetAllAsync();
-            return _mapper.Map<List<ClientDto>>(clients);
+            return Ok(_mapper.Map<List<ClientDto>>(clients));
         }
 
         [HttpGet("{id}")]
@@ -53,38 +51,44 @@ namespace ApiSGTA.Controllers
         }
 
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<Client>> Post(ClientDto clientDto)
+        public async Task<ActionResult<ClientDto>> Post([FromBody] ClientDto clientDto)
         {
             if (clientDto == null)
-            {
                 return BadRequest();
-            }
 
+            // 1) Mapeo DTO -> entidad (sin ciclos)
             var client = _mapper.Map<Client>(clientDto);
 
+            // 2) Guardo el cliente para que se genere el Id
             _unitOfWork.ClientRepository.Add(client);
-            await _unitOfWork.SaveAsync(); // Guarda para que se genere el Id
+            await _unitOfWork.SaveAsync();
 
-            // Guardar los teléfonos si existen
-            if (clientDto.TelephoneNumbers != null && clientDto.TelephoneNumbers.Any())
+            // 3) Guardo los teléfonos si los hay
+            if (clientDto.TelephoneNumbers?.Any() == true)
             {
                 foreach (var telDto in clientDto.TelephoneNumbers)
                 {
-                    var tel = new TelephoneNumbers
+                    _unitOfWork.TelephoneNumbersRepository.Add(new TelephoneNumbers
                     {
                         ClientId = client.Id,
-                        Number = telDto.Number
-                    };
-                    _unitOfWork.TelephoneNumbersRepository.Add(tel);
+                        Number   = telDto.Number
+                    });
                 }
-
                 await _unitOfWork.SaveAsync();
             }
 
-            return CreatedAtAction(nameof(Post), new { id = client.Id }, client);
+            // 4) Recargo el cliente completo con sus teléfonos
+            var created = await _unitOfWork.ClientRepository.GetByIdAsync(client.Id);
+
+            // 5) Mapeo entidad -> DTO (ya con Id y teléfonos)
+            var resultDto = _mapper.Map<ClientDto>(created);
+
+            // 6) Devuelvo CreatedAt con el DTO
+            return CreatedAtAction(nameof(Get), new { id = resultDto.Id }, resultDto);
         }
+
 
 
         [HttpPut("{id}")]
@@ -93,21 +97,61 @@ namespace ApiSGTA.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Put(int id, [FromBody] ClientDto clientDto)
         {
-            // Validación: objeto nulo
             if (clientDto == null)
-                return NotFound();
+                return BadRequest("Cliente inválido.");
+
+            var client = await _unitOfWork.ClientRepository.GetByIdAsync(id); // Incluye TelephoneNumbers por el Include del repo
+            if (client == null)
+                return NotFound($"Cliente con id {id} no encontrado.");
 
             var hasActiveOrders = await _unitOfWork.ServiceOrderRepository.GetActiveOrdersByClientIdAsync(id);
-
             if (hasActiveOrders.Any())
             {
                 return Conflict("No se puede editar el cliente porque tiene órdenes de servicio activas.");
             }
 
-            var clients = _mapper.Map<Client>(clientDto);
-            _unitOfWork.ClientRepository.Update(clients);
+            // Actualiza datos del cliente
+            client.Name = clientDto.Name;
+            client.LastName = clientDto.LastName;
+            client.Email = clientDto.Email;
+            client.Birth = clientDto.Birth;
+            client.Identification = clientDto.Identification;
+
+            // Sincronizar teléfonos
+            var incomingPhones = clientDto.TelephoneNumbers ?? new List<TelephoneNumbersDto>();
+            var currentPhones = client.TelephoneNumbers ?? new List<TelephoneNumbers>();
+
+            // Eliminar los que ya no están en el DTO
+            var toRemove = currentPhones
+                .Where(db => !incomingPhones.Any(i => i.Id == db.Id))
+                .ToList();
+
+            foreach (var phone in toRemove)
+                _unitOfWork.TelephoneNumbersRepository.Remove(phone);
+
+            // Agregar nuevos o actualizar existentes
+            foreach (var dtoPhone in incomingPhones)
+            {
+                var existing = currentPhones.FirstOrDefault(p => p.Id == dtoPhone.Id);
+                if (existing != null)
+                {
+                    // Actualizar número existente
+                    existing.Number = dtoPhone.Number;
+                }
+                else
+                {
+                    // Agregar nuevo teléfono
+                    _unitOfWork.TelephoneNumbersRepository.Add(new TelephoneNumbers
+                    {
+                        ClientId = client.Id,
+                        Number = dtoPhone.Number
+                    });
+                }
+            }
+
             await _unitOfWork.SaveAsync();
-            return Ok(clientDto);
+
+            return Ok("Cliente actualizado correctamente.");
         }
 
         [HttpDelete("{id}")]

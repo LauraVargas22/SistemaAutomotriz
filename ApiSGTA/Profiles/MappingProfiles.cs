@@ -9,9 +9,10 @@ namespace ApiSGTA.Profiles
         public MappingProfiles()
         {
             CreateMap<Auditory, AuditoryDto>().ReverseMap();
-            CreateMap<ClientDto, Client>()
-                .ForMember(dest => dest.TelephoneNumbers, opt => opt.MapFrom(src => src.TelephoneNumbers));
             CreateMap<Client, ClientDto>()
+                .ForMember(d => d.Id,            o => o.MapFrom(s => s.Id))
+                .ForMember(d => d.TelephoneNumbers, o => o.MapFrom(s => s.TelephoneNumbers));
+            CreateMap<ClientDto, Client>()
                 .ForMember(dest => dest.TelephoneNumbers, opt => opt.MapFrom(src => src.TelephoneNumbers));
             CreateMap<DetailInspection, DetailInspectionDto>().ReverseMap();
             CreateMap<DetailsDiagnostic, DetailsDiagnosticDto>().ReverseMap();

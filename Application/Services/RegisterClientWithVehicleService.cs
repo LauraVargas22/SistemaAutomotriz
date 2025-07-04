@@ -35,11 +35,14 @@ namespace Application.Services
                 _unitOfWork.ClientRepository.Add(client);
                 await _unitOfWork.SaveAsync(); // ⬅️ Aquí se guarda el cliente para obtener su Id
 
-                // ✅ Aquí va el bloque B: registrar teléfonos si existen
                 if (dto.TelephoneNumbers != null && dto.TelephoneNumbers.Any())
                 {
+                    Console.WriteLine($"📞 Registrando {dto.TelephoneNumbers.Count} teléfonos para el cliente con ID {client.Id}");
+
                     foreach (var phone in dto.TelephoneNumbers)
                     {
+                        Console.WriteLine($"➡️ Teléfono: {phone}");
+
                         var telephone = new TelephoneNumbers
                         {
                             ClientId = client.Id,
@@ -51,33 +54,36 @@ namespace Application.Services
 
                     await _unitOfWork.SaveAsync(); // ⬅️ Guardar los teléfonos
                 }
-
-                // 🚗 Luego se registran los vehículos
-                if (dto.Vehicles == null || !dto.Vehicles.Any())
+                else
                 {
-                    throw new Exception("Debe registrar al menos un vehículo.");
+                    Console.WriteLine("⚠️ No llegaron teléfonos.");
                 }
 
-                foreach (var v in dto.Vehicles)
+                // 🚗 Luego se registran los vehículos si existen
+                if (dto.Vehicles != null && dto.Vehicles.Any())
                 {
-                    var typeVehicle = await _unitOfWork.TypeVehicleRepository.GetByIdAsync(v.TypeVehicleId);
-                    if (typeVehicle == null)
-                        throw new Exception($"Tipo de vehículo con ID {v.TypeVehicleId} no encontrado.");
-
-                    var vehicle = new Vehicle
+                    foreach (var v in dto.Vehicles)
                     {
-                        Brand = v.Brand!,
-                        Model = v.Model!,
-                        VIN = v.VIN!,
-                        Mileage = v.Mileage,
-                        ClientId = client.Id,
-                        TypeVehicleId = v.TypeVehicleId
-                    };
+                        var typeVehicle = await _unitOfWork.TypeVehicleRepository.GetByIdAsync(v.TypeVehicleId);
+                        if (typeVehicle == null)
+                            throw new Exception($"Tipo de vehículo con ID {v.TypeVehicleId} no encontrado.");
 
-                    _unitOfWork.VehicleRepository.Add(vehicle);
+                        var vehicle = new Vehicle
+                        {
+                            Brand = v.Brand!,
+                            Model = v.Model!,
+                            VIN = v.VIN!,
+                            Mileage = v.Mileage,
+                            ClientId = client.Id,
+                            TypeVehicleId = v.TypeVehicleId
+                        };
+
+                        _unitOfWork.VehicleRepository.Add(vehicle);
+                    }
+
+                    await _unitOfWork.SaveAsync(); // ⬅️ Guardar vehículos si hay
                 }
 
-                await _unitOfWork.SaveAsync(); // ⬅️ Guardar vehículos
 
                 return client.Id;
             }
