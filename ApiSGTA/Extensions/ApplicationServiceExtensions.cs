@@ -122,6 +122,9 @@ namespace ApiSGTA.Extensions
                     options.AddPolicy("AdminOnly", policy =>
                         policy.RequireRole("Admin"));
 
+                    options.AddPolicy("RecepcionistOnly", policy =>
+                        policy.RequireRole("Recepcionist"));
+
                     // Solo Mechanics
                     options.AddPolicy("MechanicOnly", policy =>
                         policy.RequireRole("Mechanic"));

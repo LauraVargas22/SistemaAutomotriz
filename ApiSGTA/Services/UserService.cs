@@ -124,11 +124,9 @@ namespace ApiSGTA.Services
                 else
                 {
                     var refreshToken = CreateRefreshToken(user.Id);
-                    dataUserDto.RefreshToken = refreshToken.Token;
+                    dataUserDto.RefreshToken         = refreshToken.Token;
                     dataUserDto.RefreshTokenExpiration = refreshToken.Expires;
                     user.RefreshTokens.Add(refreshToken);
-                    _unitOfWork.UserRepository.Update(user);
-                    await _unitOfWork.SaveAsync();
                 }
                 return dataUserDto;
             }
@@ -197,7 +195,7 @@ namespace ApiSGTA.Services
                 {
                     UserId = userId,
                     Token = Convert.ToBase64String(randomNumber),
-                    Expires = DateTime.UtcNow.AddDays(10),
+                    Expires = DateTime.UtcNow.AddMinutes(1),
                     Created = DateTime.UtcNow
                 };
             }

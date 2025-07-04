@@ -10,9 +10,7 @@ using AutoMapper;
 
 namespace ApiSGTA.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    [Authorize(Roles = "Administrator")]
+    
     public class StateController : BaseApiController
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -24,7 +22,9 @@ namespace ApiSGTA.Controllers
             _mapper = mapper;
         }
 
+        
         [HttpGet]
+        [Authorize(Roles = "Receptionist")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<IEnumerable<StateDto>>> Get()
@@ -46,7 +46,10 @@ namespace ApiSGTA.Controllers
             return _mapper.Map<StateDto>(state);
         }
 
+
+
         [HttpPost]
+        [Authorize(Roles = "Receptionist")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<State>> Post(StateDto stateDto)
