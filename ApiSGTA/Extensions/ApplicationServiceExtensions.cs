@@ -55,6 +55,7 @@ namespace ApiSGTA.Extensions
             // Registro de servicios
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<CreateEmailServiceOrderService>();
+            services.AddScoped<ClientServiceOrderService>();
         }
 
         public static IServiceCollection AddCustomRateLimiter(this IServiceCollection services)

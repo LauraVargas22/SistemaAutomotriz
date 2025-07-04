@@ -10,5 +10,7 @@ namespace Application.Interfaces
     {
         Task<bool> GetActiveOrdersByVehicleIdAsync(int vehicleId);
         Task<IEnumerable<ServiceOrder>> GetActiveOrdersByClientIdAsync(int clientId);
+        Task<IEnumerable<ServiceOrder>> GetServiceOrdersByClientIdentificationAsync(string identification);
+        Task<bool> UpdateServiceOrderAuthorizationAsync(int serviceOrderId, bool isAuthorized, string? clientMessage);
     }
 }
