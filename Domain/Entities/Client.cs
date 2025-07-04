@@ -11,11 +11,11 @@ namespace Domain.Entities
         public string? Name { get; set; }
         public string? LastName { get; set; }
         public string? Email { get; set; }
-        public string? Phone { get; set; }
         public DateOnly Birth { get; set; }
         public string? Identification { get; set; }
 
         public ICollection<Vehicle>? Vehicles { get; set; } = new HashSet<Vehicle>();
         public ICollection<ServiceOrder>? ServiceOrders { get; set; } = new HashSet<ServiceOrder>();
-    }
-}
+        public ICollection<TelephoneNumbers>? TelephoneNumbers { get; set; } = new HashSet<TelephoneNumbers>();
+    } 
+} 

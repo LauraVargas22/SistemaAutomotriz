@@ -10,12 +10,13 @@ namespace Application.DTOs.RegisterClientWithVehicleDto
         public string? Name { get; set; }
         public string? LastName { get; set; }
         public string? Email { get; set; }
-        public string? Phone { get; set; }
         public DateOnly Birth { get; set; }
         public string? Identification { get; set; }
 
         // Lista de vehículos que se van a registrar para ese cliente
         public List<RegisterVehicleDto> Vehicles { get; set; } = new();
+        public List<string>? TelephoneNumbers { get; set; } = new();
+
     }
 
     public class RegisterVehicleDto
@@ -25,6 +26,5 @@ namespace Application.DTOs.RegisterClientWithVehicleDto
         public string? VIN { get; set; }
         public int Mileage { get; set; }
         public int TypeVehicleId { get; set; }
-        
     }
 }

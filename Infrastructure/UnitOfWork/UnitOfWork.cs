@@ -26,6 +26,8 @@ namespace Infrastructure.UnitOfWork
         private IUserSpecializationRepository? _userSpecializationRepository;
         private IVehicleRepository? _vehicleRepository;
         private IRefreshTokenRepository? _refreshToken;
+        // New
+        private ITelephoneNumbersRepository? _telephoneNumbersRepository;
 
         private readonly AutoTallerDbContext _context;
 
@@ -274,6 +276,19 @@ namespace Infrastructure.UnitOfWork
             }
         }
 
+        // New
+
+        public ITelephoneNumbersRepository TelephoneNumbersRepository
+        {
+            get
+            {
+                if (_telephoneNumbersRepository == null)
+                {
+                    _telephoneNumbersRepository = new TelephoneNumbersRepository(_context);
+                }
+                return _telephoneNumbersRepository;
+            }
+        }
         public async Task<int> SaveAsync()
         {
             return await _context.SaveChangesAsync();

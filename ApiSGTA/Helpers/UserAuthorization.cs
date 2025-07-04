@@ -10,7 +10,7 @@ namespace ApiSGTA.Helpers
         public enum Rols
         {
             Administrator,
-            Recepcionist,
+            Receptionist,
             Mechanic
         }
     }

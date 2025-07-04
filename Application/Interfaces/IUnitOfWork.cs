@@ -27,6 +27,7 @@ namespace Application.Interfaces
         IUserSpecializationRepository UserSpecializationRepository { get; }
         IVehicleRepository VehicleRepository { get; }
         IRefreshTokenRepository RefreshTokenRepository { get; }
+        ITelephoneNumbersRepository TelephoneNumbersRepository { get; }
         Task<int> SaveAsync();
     }
 }

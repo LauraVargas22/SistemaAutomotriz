@@ -142,6 +142,96 @@ El archivo SQL se encuentra en la carpeta **db/** del proyecto:
 ```
 Puedes ejecutar este script desde tu cliente PostgreSQL preferido (como pgAdmin, DBeaver o la terminal interactiva psql) una vez creada la base de datos y aplicadas las migraciones.
 
+## Interceptores
+El uso de interceptores permite ejecutar lógica personalizada antes o después de que los cambios sean persistidos en la base de datos. Es ideal para auditoría, ya que puede registrar automáticamente todas las inserciones, actualizaciones y eliminaciones.
+[Ver Más](https://www.woodruff.dev/tracking-every-change-using-savechanges-interception-for-ef-core-auditing/#:~:text=%C2%BFQu%C3%A9%20es%20SaveChanges%20Interception?,y%20almacenar%20registros%20de%20auditor%C3%ADa%20.)
+
+1. Interceptor Personalizado:
+Se implementa una clase que hereda de **SaveChangesInterceptor** y sobreescribe los métodos SavingChanges y SavingChangesAsync.
+En estos métodos, se recorren las entidades rastreadas por el contexto y se registra el tipo de cambio (agregado, modificado, eliminado), el nombre de la entidad, el usuario responsable y la fecha/hora.
+2. Entidad de Auditoría:
+Se utiliza una entidad (por ejemplo, Auditory o AuditLog) para almacenar los registros de auditoría en la base de datos.
+3. Registro del Interceptor:
+El interceptor se registra en la configuración del DbContext y en el contenedor de dependencias (Program.cs), asegurando que se aplique a cada operación de guardado.
+
+### Implementación
+1. [Interceptor Personalizado](./Infrastructure/Interceptors/AuditInterceptor.cs)
+2. [Entidad Auditoria](./Domain/Entities/Auditory.cs)
+3. [Registro en el DbContext](./Infrastructure/Data/AutoTallerDbContext.cs)
+```
+public class AutoTallerDbContext : DbContext
+{
+    private readonly AuditInterceptor _auditInterceptor;
+
+    public AutoTallerDbContext(DbContextOptions<AutoTallerDbContext> options, AuditInterceptor auditInterceptor)
+        : base(options)
+    {
+        _auditInterceptor = auditInterceptor;
+    }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder.AddInterceptors(_auditInterceptor);
+    }
+}
+```
+4. [Inyección](./ApiSGTA/Extensions/ApplicationServiceExtensions.cs)
+```
+//Interceptor
+services.AddScoped<AuditInterceptor>();
+services.AddHttpContextAccessor();
+
+```
+
+## Configuración Servicio Email
+Implementar un servicio de notificaciones por email robusto y escalable que permita enviar notificaciones automáticas a los clientes del taller automotriz cuando se crean o actualizan órdenes de servicio.
+
+- Funcionalidades Principales
+
+✅ Envío de email al crear orden de servicio
+✅ Notificación de cambios de estado
+✅ Plantillas HTML personalizables
+✅ Soporte para múltiples proveedores SMTP
+
+- Paquetes implementados
+```
+cd Infrastructure
+dotnet add package MailKit --version 4.3.0
+dotnet add package MimeKit --version 4.3.0
+dotnet restore
+```
+
+### Implementación
+1. [Clase de Configuración](./Infrastructure/Configuration/EmailConfiguration.cs)
+2. [Configuración appsettings.json](./ApiSGTA/appsettings.json)
+```
+"EmailSettings": {
+    "SmtpServer": "smtp.gmail.com",
+    "SmtpPort": 587,
+    "SenderEmail": "sistemaautomotriz6@gmail.com",
+    "SenderPassword": "oxrv ekkz lqaa hpoq",
+    "SenderName": "Sistema Taller Automotriz"
+  }
+```
+Para obtener la contraseña del correo se tiene que crear una contraseña para aplicaciones. [Ver más](https://www.youtube.com/watch?v=ZfEK3WP73eY)
+3. [Definir puerto Domain](./Domain/Ports/IEmailService.cs)
+4. [Adaptador Infrastructura](./Infrastructure/Adapters/EmailService.cs)
+7. [Inyección](./ApiSGTA/Extensions/ApplicationServiceExtensions.cs)
+```
+// Configuración de Email
+var emailConfig = services.BuildServiceProvider().GetRequiredService<IConfiguration>().GetSection("EmailSettings").Get<EmailConfiguration>();
+services.AddSingleton(emailConfig);
+
+// Registro de servicios
+services.AddScoped<IEmailService, EmailService>();
+services.AddScoped<CreateEmailServiceOrderService>();
+services.AddScoped<ClientServiceOrderService>();
+```
+5. [Implementar caso de Uso](./Application/Services/CreateEmailServiceOrderService.cs)
+Este caso de uso permite el envio del email automaticamente al registrar una orden de servicio.
+6. [Aplicación Controlador](./ApiSGTA/Controllers/ServiceOrderController.cs)
+
+
 # Autores ✒️
 
 - Laura Mariana Vargas  

@@ -16,58 +16,77 @@ namespace Application.Services
         }
 
         public async Task<int> ExecuteAsync(RegisterClientWithVehicleDto dto)
-        {
-            // Validación opcional: verificar que no exista otro cliente con la misma identificación
-            var existingClient = await _unitOfWork.ClientRepository
-                .GetByIdentificationAsync(dto.Identification!);
-
-            if (existingClient is not null)
-                throw new Exception("Ya existe un cliente con esta identificación.");
-
-            var client = new Client
             {
-                Name = dto.Name!,
-                LastName = dto.LastName!,
-                Email = dto.Email!,
-                Phone = dto.Phone!,
-                Birth = dto.Birth,
-                Identification = dto.Identification!
-            };
+                var existingClient = await _unitOfWork.ClientRepository
+                    .GetByIdentificationAsync(dto.Identification!);
 
+                if (existingClient is not null)
+                    throw new Exception("Ya existe un cliente con esta identificación.");
 
-            _unitOfWork.ClientRepository.Add(client);
-            await _unitOfWork.SaveAsync();
-
-            int clientId = client.Id;
-            
-            if (dto.Vehicles == null || !dto.Vehicles.Any())
-            {
-                throw new Exception("Debe registrar al menos un vehículo.");
-            }
-
-            foreach (var v in dto.Vehicles)
-            {
-                // Validar que el tipo de vehículo existe
-                var typeVehicle = await _unitOfWork.TypeVehicleRepository.GetByIdAsync(v.TypeVehicleId);
-                if (typeVehicle == null)
-                    throw new Exception($"Tipo de vehículo con ID {v.TypeVehicleId} no encontrado.");
-
-                var vehicle = new Vehicle
+                var client = new Client
                 {
-                    Brand = v.Brand!,
-                    Model = v.Model!,
-                    VIN = v.VIN!,
-                    Mileage = v.Mileage,
-                    ClientId = clientId,
-                    TypeVehicleId = v.TypeVehicleId
+                    Name = dto.Name!,
+                    LastName = dto.LastName!,
+                    Email = dto.Email!,
+                    Birth = dto.Birth,
+                    Identification = dto.Identification!
                 };
 
-                _unitOfWork.VehicleRepository.Add(vehicle);
+                _unitOfWork.ClientRepository.Add(client);
+                await _unitOfWork.SaveAsync(); // ⬅️ Aquí se guarda el cliente para obtener su Id
+
+                if (dto.TelephoneNumbers != null && dto.TelephoneNumbers.Any())
+                {
+                    Console.WriteLine($"📞 Registrando {dto.TelephoneNumbers.Count} teléfonos para el cliente con ID {client.Id}");
+
+                    foreach (var phone in dto.TelephoneNumbers)
+                    {
+                        Console.WriteLine($"➡️ Teléfono: {phone}");
+
+                        var telephone = new TelephoneNumbers
+                        {
+                            ClientId = client.Id,
+                            Number = phone
+                        };
+
+                        _unitOfWork.TelephoneNumbersRepository.Add(telephone);
+                    }
+
+                    await _unitOfWork.SaveAsync(); // ⬅️ Guardar los teléfonos
+                }
+                else
+                {
+                    Console.WriteLine("⚠️ No llegaron teléfonos.");
+                }
+
+                // 🚗 Luego se registran los vehículos si existen
+                if (dto.Vehicles != null && dto.Vehicles.Any())
+                {
+                    foreach (var v in dto.Vehicles)
+                    {
+                        var typeVehicle = await _unitOfWork.TypeVehicleRepository.GetByIdAsync(v.TypeVehicleId);
+                        if (typeVehicle == null)
+                            throw new Exception($"Tipo de vehículo con ID {v.TypeVehicleId} no encontrado.");
+
+                        var vehicle = new Vehicle
+                        {
+                            Brand = v.Brand!,
+                            Model = v.Model!,
+                            VIN = v.VIN!,
+                            Mileage = v.Mileage,
+                            ClientId = client.Id,
+                            TypeVehicleId = v.TypeVehicleId
+                        };
+
+                        _unitOfWork.VehicleRepository.Add(vehicle);
+                    }
+
+                    await _unitOfWork.SaveAsync(); // ⬅️ Guardar vehículos si hay
+                }
+
+
+                return client.Id;
             }
 
-            await _unitOfWork.SaveAsync();
-
-            return client.Id;
-        }
     }
 }

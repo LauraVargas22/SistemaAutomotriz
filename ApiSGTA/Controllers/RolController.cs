@@ -23,5 +23,14 @@ namespace ApiSGTA.Controllers
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
+
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<IEnumerable<RolDto>>> Get()
+        {
+            var rols = await _unitOfWork.RolRepository.GetAllAsync();
+            return _mapper.Map<List<RolDto>>(rols);
+        }
     }
 }
